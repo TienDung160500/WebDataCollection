@@ -1,0 +1,27 @@
+<img src={{backgroundLogin}} class="app-background-login" alt="imageLoggin">
+<form class="login">
+  <div class="box">
+    <img src="./assets/images/logo-icon.png" class="logo-icon" alt="logo-icon">
+    <p>công ty cổ phần bóng đèn bóng đèn phích nước rạng đông</p>
+    <div class="username">
+      <label for="">
+        <!-- <img src="assets/icons/user.png" alt=""> -->
+      </label>
+      <input type="text" class="i-username" [(ngModel)]="loginObj.username" [ngModelOptions]="{standalone:true}" placeholder="Tài khoản">
+    </div>
+    <div class="password">
+      <label for="">
+
+      </label>
+      <input type="password" class="i-password" [(ngModel)]="loginObj.password" [ngModelOptions]="{standalone:true}" placeholder="Mật khẩu">
+    </div>
+    <div class="btn">
+      <button
+      type="button"
+      (click)="onLogin()"
+      class="btn-login">Đăng nhập</button>
+    </div>
+  </div>
+</form>
+
+

@@ -1,0 +1,8 @@
+<div>hello
+        <ul>
+                <li *ngFor="let data of timeUpdate  "> {{data.tenThongSo}}</li>
+        </ul>
+</div>
+<button type="button" 
+        (click)="getByTimeUpdate()"
+        style="background-color: aqua;">Tìm kiếm</button>
