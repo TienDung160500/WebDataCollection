@@ -6,7 +6,7 @@
     <div class="username">
       <input type="login" 
       class="i-username" 
-      [(ngModel)]="username" 
+      [(ngModel)]="loginObj.username" [ngModelOptions]="{standalone:true}"
       placeholder="Tài khoản">
       <label for="">
         <!-- <img src="assets/icons/user.png" alt=""> -->
@@ -15,7 +15,7 @@
     <div class="password">
       <input type="password" 
       class="i-password" 
-      [(ngModel)]="password" 
+      [(ngModel)]="loginObj.password" [ngModelOptions]="{standalone:true}"
       placeholder="Mật khẩu">
       <label for="">
         <!-- <img src="assets/icons/lock.svg" alt=""> -->

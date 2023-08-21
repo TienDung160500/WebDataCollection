@@ -1,1 +1,171 @@
-<p>welcome-content works!</p>
+<a routerLink="/welcome"></a>
+<nz-layout>
+  <nz-sider nzCollapsible nzWidth="200px">
+    <div class="logo"></div>
+    <ul nz-menu nzTheme="dark" nzMode="inline">
+      <li nz-menu-item>
+        <span nz-icon nzType="home" nzTheme="outline"></span>
+        <span>Trang chủ</span>
+      </li>
+      
+      <li nz-submenu nzTitle="Quản lý thông số" nzIcon="control">
+        <ul>
+          <li nz-menu-item>Thông số máy</li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Quản lý kịch bản" nzIcon="setting">
+        <ul>
+          <li nz-menu-item>Danh sách kịch bản</li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Sản xuất hàng ngày" nzIcon="folder-open">
+        <ul>
+          <li nz-menu-item>Thông tin</li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <p>công ty cổ phần bóng đèn phích nước rạng đông</p>
+    </nz-header>
+    <nz-content>
+      <nz-breadcrumb>
+        <nz-breadcrumb-item>Quản lý thông số</nz-breadcrumb-item>
+        <nz-breadcrumb-item>Thông số máy</nz-breadcrumb-item>
+        <button nz-button [nzSize]="size" nzType="primary" style="margin-left: 1180px;">Thêm mới
+          <span nz-icon nzType="plus" nzTheme="outline"></span>
+        </button>
+      </nz-breadcrumb>
+      <div class="inner-content">
+        <nz-table #fixedTable [nzData]="listOfData" [nzScroll]="{ x: '1150px', y: '850px' }">
+          <thead>
+            <tr>
+              <th nzLeft>STT</th>
+              <th nzLeft>
+                Mã thông số 
+                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                  <input type="text" nz-input placeholder="search" />
+                </nz-input-group>
+                <ng-template #suffixIconButton>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+                </ng-template>
+
+                <div *ngIf="searchResults.length > 0">
+                  <ul>
+                    <li *ngFor="let result of searchResults">
+                      {{ result.code_parameter }}
+                    </li>
+                  </ul>
+                </div>
+              </th>
+              <th>
+                Tên thông số
+                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                  <input type="text" nz-input placeholder="search" />
+                </nz-input-group>
+                <ng-template #suffixIconButton>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+                </ng-template>
+
+                <div *ngIf="searchResults.length > 0">
+                  <ul>
+                    <li *ngFor="let result of searchResults">
+                      {{ result.name_parameter }}
+                    </li>
+                  </ul>
+                </div>
+              </th>
+              <th>
+                Ngày tạo
+                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                  <input type="text" nz-input placeholder="search" />
+                </nz-input-group>
+                <ng-template #suffixIconButton>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+                </ng-template>
+
+                <div *ngIf="searchResults.length > 0">
+                  <ul>
+                    <li *ngFor="let result of searchResults">
+                      {{ result.date }}
+                    </li>
+                  </ul>
+                </div>
+              </th>
+              <th>
+                Ngày cập nhật
+                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                  <input type="text" nz-input placeholder="search" />
+                </nz-input-group>
+                <ng-template #suffixIconButton>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+                </ng-template>
+
+                <div *ngIf="searchResults.length > 0">
+                  <ul>
+                    <li *ngFor="let result of searchResults">
+                      {{ result.date }}
+                    </li>
+                  </ul>
+                </div>
+              </th>
+              <th>
+                Cập nhật bởi
+                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                  <input type="text" nz-input placeholder="search" />
+                </nz-input-group>
+                <ng-template #suffixIconButton>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+                </ng-template>
+
+                <div *ngIf="searchResults.length > 0">
+                  <ul>
+                    <li *ngFor="let result of searchResults">
+                      {{ result.username }}
+                    </li>
+                  </ul>
+                </div>
+              </th>
+              <th>
+                Trạng thái
+                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+                  <input type="text" nz-input placeholder="search" />
+                </nz-input-group>
+                <ng-template #suffixIconButton>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+                </ng-template>
+              </th>
+              <th nzRight>Options</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let data of fixedTable.data">
+              <td nzLeft>{{ data.STT }}</td>
+              <td nzLeft>{{ data.code_parameter }}</td>
+              <td>{{ data.name_parameter }}</td>
+              <td>{{ data.date }}</td>
+              <td>{{ data.date }}</td>
+              <td>{{ data.username }}</td>
+              <td>{{ data.name_parameter }}</td>
+              <td nzRight>
+                <button class="btn-parameter-edit">
+                  <span nz-icon nzType="tool" nzTheme="outline" style="font-size: 30px;"></span>
+                </button>
+                <button class="btn-parameter-delete">
+                  <span nz-icon nzType="delete" nzTheme="outline" style="font-size: 30px;"></span>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </nz-table>
+      </div>
+      <button 
+      nz-button [nzSize]="size" 
+      nzType="primary" 
+      style="margin-left: 1500px;margin-top: 15px;">
+      Xác nhận
+    </button>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

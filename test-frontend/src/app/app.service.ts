@@ -18,22 +18,6 @@ export class AppService {
     const url = "http://localhost:8080" + "/users"
     return this.http.get<any>(url);
   }
-  // postUser(){
-  //   const url = "http://localhost:8080" + "/users/create";
-  //   const body = {userName:"nam",password:"123456" }
-  //   return this.http.post<userRes>(url,body)
-  // }
-  // putUser(){
-  //   const url = "http://localhost:8080" + "/users/5"
-  //   const body = {userName:"Phong", password:"88888"}
-  //   return this.http.put<userRes>(url,body);
-  // }
-  // delUser(){
-  //   const url = "http://localhost:8080" + "/users/6"
-  //   return this.http.delete(url);
-  // }
- 
-
   //---------------------------Quan ly thong so
   //---------------------------Hien thi danh sach thong so
   danhSachThongSo(){

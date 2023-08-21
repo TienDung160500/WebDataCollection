@@ -1,24 +1,24 @@
-.trigger {
-  font-size: 18px;
-  line-height: 64px;
-  padding: 0 24px;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-.trigger:hover {
-  color: #1890ff;
-}
-
 .logo {
   height: 32px;
-  background: rgba(255, 255, 255, 0.2);
   margin: 16px;
+  background-image: url("../../assets/images/logo.webp");
+  background-size: 100%;
+  background-repeat: no-repeat;
 }
 
 nz-header {
   background: #fff;
   padding: 0;
+}
+
+nz-header p {
+  color: #f00;
+  text-align: center;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-transform: uppercase;
 }
 
 nz-content {
@@ -30,11 +30,36 @@ nz-breadcrumb {
 }
 
 .inner-content {
-  padding: 24px;
+  padding: 12px;
   background: #fff;
-  min-height: 360px;
+  min-height: 805px;
 }
 
 nz-footer {
   text-align: center;
+}
+
+.btn-parameter-delete,
+.btn-parameter-edit{
+  border: none;
+  cursor: pointer;
+  /* height: 50px;
+  width: 50px;  */
+}
+
+.btn-parameter-edit {
+  margin-right: 15px;
+}
+
+.btn-parameter-delete:hover {
+  background-color: #f00;
+  color: #fff;
+}
+
+[nz-button] {
+  margin-bottom: 12px;
+}
+
+nz-button-group [nz-button] {
+  margin-right: 0;
 }
