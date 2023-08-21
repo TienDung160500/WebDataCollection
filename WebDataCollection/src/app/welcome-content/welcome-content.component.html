@@ -33,18 +33,9 @@
       <nz-breadcrumb>
         <nz-breadcrumb-item>Quản lý thông số</nz-breadcrumb-item>
         <nz-breadcrumb-item>Thông số máy</nz-breadcrumb-item>
-        <button nz-button nzType="primary" (click)="showModalMiddle()" 
-        style="position: absolute; right: 60px;">Thêm mới
+        <button nz-button [nzSize]="size" nzType="primary" style="margin-left: 1180px;">Thêm mới
           <span nz-icon nzType="plus" nzTheme="outline"></span>
         </button>
-        <nz-modal [(nzVisible)]="isVisibleMiddle" nzTitle="Vertically centered modal dialog" nzCentered
-          (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
-          <ng-container *nzModalContent>
-            <p>some contents...</p>
-            <p>some contents...</p>
-            <p>some contents...</p>
-          </ng-container>
-        </nz-modal>
       </nz-breadcrumb>
       <div class="inner-content">
         <nz-table #fixedTable [nzData]="listOfData" [nzScroll]="{ x: '1150px', y: '850px' }">
@@ -52,97 +43,109 @@
             <tr>
               <th nzLeft>STT</th>
               <th nzLeft>
+                <!-- Tìm kiếm theo mã thông số -->
                 Mã thông số 
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                  <input type="text" nz-input placeholder="search" />
+                  <input type="text" nz-input placeholder="search"
+                  [(ngModel)]="maThongSo" [ngModelOptions]="{standalone:true}" />
                 </nz-input-group>
                 <ng-template #suffixIconButton>
-                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="getByMaThongSo()"></span></button>
                 </ng-template>
 
                 <div *ngIf="searchResults.length > 0">
                   <ul>
                     <li *ngFor="let result of searchResults">
-                      {{ result.code_parameter }}
+                      {{ result.maThongSo }}
                     </li>
                   </ul>
                 </div>
               </th>
               <th>
+                <!-- Tìm kiếm theo tên thông số -->
                 Tên thông số
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                  <input type="text" nz-input placeholder="search" />
+                  <input type="text" nz-input placeholder="search"
+                  [(ngModel)]="tenThongSo" [ngModelOptions]="{standalone:true}"  />
                 </nz-input-group>
-                <ng-template #suffixIconButton>
-                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+                <ng-template #suffixIconButton (click)="getByTenThongSo()">
+                  <button nz-button nzType="primary" nzSearch ><span nz-icon nzType="search" (click)="getByTenThongSo()"></span></button>
                 </ng-template>
 
                 <div *ngIf="searchResults.length > 0">
                   <ul>
                     <li *ngFor="let result of searchResults">
-                      {{ result.name_parameter }}
+                      {{ result.tenThongSo }}
                     </li>
                   </ul>
                 </div>
               </th>
               <th>
+                <!-- Tìm kiếm theo ngày tạo -->
                 Ngày tạo
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                  <input type="text" nz-input placeholder="search" />
+                  <input type="text" nz-input placeholder="search" 
+                  [(ngModel)]="ngayTao" [ngModelOptions]="{standalone:true}" />
                 </nz-input-group>
                 <ng-template #suffixIconButton>
-                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="getByNgayTao()"></span></button>
                 </ng-template>
 
                 <div *ngIf="searchResults.length > 0">
                   <ul>
                     <li *ngFor="let result of searchResults">
-                      {{ result.date }}
+                      {{ result.ngayTao }}
                     </li>
                   </ul>
                 </div>
               </th>
               <th>
+                <!-- Tìm kiếm theo ngày cập nhật -->
                 Ngày cập nhật
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                  <input type="text" nz-input placeholder="search" />
+                  <input type="text" nz-input placeholder="search" 
+                  [(ngModel)]="timeUpdate" [ngModelOptions]="{standalone:true}" />
                 </nz-input-group>
                 <ng-template #suffixIconButton>
-                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="getByTimeUpdate()"></span></button>
                 </ng-template>
 
                 <div *ngIf="searchResults.length > 0">
                   <ul>
                     <li *ngFor="let result of searchResults">
-                      {{ result.date }}
+                      {{ result.timeUpdate }}
                     </li>
                   </ul>
                 </div>
               </th>
               <th>
+                <!-- Tìm kiếm theo tài khoản -->
                 Cập nhật bởi
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                  <input type="text" nz-input placeholder="search" />
+                  <input type="text" nz-input placeholder="search" 
+                  [(ngModel)]="updateBy" [ngModelOptions]="{standalone:true}" />
                 </nz-input-group>
                 <ng-template #suffixIconButton>
-                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="getByUpdateBy()"></span></button>
                 </ng-template>
 
                 <div *ngIf="searchResults.length > 0">
                   <ul>
                     <li *ngFor="let result of searchResults">
-                      {{ result.username }}
+                      {{ result.updateBy }}
                     </li>
                   </ul>
                 </div>
               </th>
               <th>
+                <!-- Tìm kiếm theo trạng thái -->
                 Trạng thái
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                  <input type="text" nz-input placeholder="search" />
+                  <input type="text" nz-input placeholder="search"
+                  [(ngModel)]="status" [ngModelOptions]="{standalone:true}" />
                 </nz-input-group>
                 <ng-template #suffixIconButton>
-                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="getByStatus()"></span></button>
                 </ng-template>
               </th>
               <th nzRight>Options</th>
@@ -150,13 +153,13 @@
           </thead>
           <tbody>
             <tr *ngFor="let data of fixedTable.data">
-              <td nzLeft>{{ data.STT }}</td>
-              <td nzLeft>{{ data.code_parameter }}</td>
-              <td>{{ data.name_parameter }}</td>
-              <td>{{ data.date }}</td>
-              <td>{{ data.date }}</td>
-              <td>{{ data.username }}</td>
-              <td>{{ data.name_parameter }}</td>
+              <td nzLeft>{{ data.idThongSo }}</td> <!--STT-->
+              <td nzLeft>{{ data.maThongSo }}</td><!--code_parameter-->
+              <td>{{ data.tenThongSo }}</td><!--name_parameter-->
+              <td>{{ data.ngayTao }}</td><!--date-->
+              <td>{{ data.timeUpdate }}</td><!--date-->
+              <td>{{ data.updateBy }}</td><!--username-->
+              <td>{{ data.status }}</td><!--name_parameter-->
               <td nzRight>
                 <button class="btn-parameter-edit">
                   <span nz-icon nzType="tool" nzTheme="outline" style="font-size: 30px;"></span>
@@ -172,7 +175,7 @@
       <button 
       nz-button [nzSize]="size" 
       nzType="primary" 
-      style="position: absolute; right: 100px;">
+      style="margin-left: 1500px;margin-top: 15px;">
       Xác nhận
     </button>
     </nz-content>
