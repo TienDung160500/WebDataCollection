@@ -1,0 +1,33 @@
+<img src="./assets/images/background-loggin.png" class="app-background-login" alt="imageLoggin">
+<form class="login" (ngSubmit)="onSubmitLogin()">
+  <div class="box">
+    <img src="./assets/images/logo-icon.png" class="logo-icon" alt="logo-icon">
+    <p>công ty cổ phần bóng đèn bóng đèn phích nước rạng đông</p>
+    <div class="username">
+      <input type="login" 
+      class="i-username" 
+      [(ngModel)]="username" 
+      placeholder="Tài khoản">
+      <label for="">
+        <!-- <img src="assets/icons/user.png" alt=""> -->
+      </label>
+    </div>
+    <div class="password">
+      <input type="password" 
+      class="i-password" 
+      [(ngModel)]="password" 
+      placeholder="Mật khẩu">
+      <label for="">
+        <!-- <img src="assets/icons/lock.svg" alt=""> -->
+      </label>
+    </div>
+    <div class="btn">
+      <button
+      type="button"
+      (click)="Login()"
+      class="btn-login">Đăng nhập</button>
+    </div>
+  </div>
+</form>
+
+
