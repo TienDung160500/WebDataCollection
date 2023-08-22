@@ -23,7 +23,6 @@ export class LoginComponent {
     password: '',
   }
 
-  
   //-------------- xác thực thông tin đăng nhập ------------------
   Login() {
     const body = {userName:this.loginObj.username,password:this.loginObj.password,lastLogin: Date.now()}

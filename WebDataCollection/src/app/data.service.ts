@@ -1,9 +1,16 @@
 import { Injectable } from '@angular/core';
 
+interface ItemData {
+  STT: string;
+  code_parameter: number;
+  name_parameter: string;
+  date: string;
+  username: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
-//khai báo trường dữ liệu
 export class DataService {
   private data: ItemData[] = [
     
@@ -16,23 +23,11 @@ export class DataService {
   search(term: string): ItemData[] {
     term = term.toLowerCase();
     return this.data.filter(item =>
-      item.maThongSo.toLowerCase().includes(term) ||
-      item.tenThongSo.toLowerCase().includes(term) ||
-      //test hiển thị
-      item.ngayTao ||
-      item.timeUpdate ||
-      item.updateBy.toLowerCase().includes(term)||
-      item.status.toLowerCase().includes(term)
+      item.STT.includes(term) ||
+      item.name_parameter.toLowerCase().includes(term) ||
+      item.date.includes(term) ||
+      item.username.toLowerCase().includes(term)
     );
   }
   constructor() { }
-}
-export interface ItemData {
-  idThongSo: Int16Array
-  maThongSo: string
-  tenThongSo: string
-  ngayTao: Date
-  timeUpdate: Date
-  updateBy: string
-  status: string
 }
