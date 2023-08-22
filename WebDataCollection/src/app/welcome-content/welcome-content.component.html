@@ -29,6 +29,7 @@
     <nz-header>
       <p>công ty cổ phần bóng đèn phích nước rạng đông</p>
     </nz-header>
+
     <nz-content>
       <nz-breadcrumb>
         <nz-breadcrumb-item>Quản lý thông số</nz-breadcrumb-item>
@@ -37,12 +38,39 @@
         style="position: absolute; right: 60px;">Thêm mới
           <span nz-icon nzType="plus" nzTheme="outline"></span>
         </button>
-        <nz-modal [(nzVisible)]="isVisibleMiddle" nzTitle="Vertically centered modal dialog" nzCentered
+        <!-- popup khai báo thông số máy -->
+        <nz-modal [(nzVisible)]="isVisibleMiddle" nzTitle="Khai báo thông số máy" nzCentered
           (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
           <ng-container *nzModalContent>
-            <p>some contents...</p>
-            <p>some contents...</p>
-            <p>some contents...</p>
+            <form action="">
+              <input nz-input placeholder="Mã máy" nzSize="default" style="width: 40%"/>
+              <input nz-input placeholder="Loại máy" nzSize="default" style="width: 40%; right: 20px; position: absolute;"/>
+            </form>
+            <nz-table #nzTable [nzData]="listOfData1" nzTableLayout="fixed">
+      <thead>
+        <tr>
+          <th nzWidth="60px"></th>
+          <th>Thông số</th>
+          <th>Mã thông số</th>
+          <th>Trạng thái</th>
+          <th>Tùy chọn</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let data of nzTable.data">
+          <tr>
+            <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+            <td>{{ data.name }}</td>
+            <td>{{ data.age }}</td>
+            <td>{{ data.address }}</td>
+            <td>{{ data.name }}</td>
+          </tr>
+          <tr [nzExpand]="expandSet.has(data.id)">
+            <span>{{ data.description }}</span>
+          </tr>
+                </ng-container>
+            </tbody>
+          </nz-table>
           </ng-container>
         </nz-modal>
       </nz-breadcrumb>
@@ -159,7 +187,7 @@
               <td>{{ data.name_parameter }}</td>
               <td nzRight>
                 <button class="btn-parameter-edit">
-                  <span nz-icon nzType="tool" nzTheme="outline" style="font-size: 30px;"></span>
+                  <span nz-icon nzType="edit" nzTheme="outline" style="font-size: 30px;"></span>
                 </button>
                 <button class="btn-parameter-delete">
                   <span nz-icon nzType="delete" nzTheme="outline" style="font-size: 30px;"></span>

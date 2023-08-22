@@ -43,8 +43,6 @@ nz-footer {
 .btn-parameter-edit{
   border: none;
   cursor: pointer;
-  /* height: 50px;
-  width: 50px;  */
 }
 
 .btn-parameter-edit {
@@ -62,4 +60,13 @@ nz-footer {
 
 nz-button-group [nz-button] {
   margin-right: 0;
+}
+
+nz-modal {
+  width: 80% !important;
+  transform: unset !important;
+}
+
+nz-table {
+  width: 100%;
 }
