@@ -49,10 +49,7 @@
                   <input type="text" nz-input placeholder="search"
                   [(ngModel)]="maThongSo" [ngModelOptions]="{standalone:true}" />
                 </nz-input-group>
-                <ng-template #suffixIconButton>
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="getByMaThongSo()"></span></button>
-                </ng-template>
-
                 <div *ngIf="searchResults.length > 0">
                   <ul>
                     <li *ngFor="let result of searchResults">
@@ -66,11 +63,10 @@
                 Tên thông số
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
                   <input type="text" nz-input placeholder="search"
-                  [(ngModel)]="tenThongSo" [ngModelOptions]="{standalone:true}"  />
+                  [(ngModel)]="tenThongSo" [ngModelOptions]="{standalone:true}" />
                 </nz-input-group>
-                <ng-template #suffixIconButton (click)="getByTenThongSo()">
+              
                   <button nz-button nzType="primary" nzSearch ><span nz-icon nzType="search" (click)="getByTenThongSo()"></span></button>
-                </ng-template>
 
                 <div *ngIf="searchResults.length > 0">
                   <ul>
@@ -80,25 +76,14 @@
                   </ul>
                 </div>
               </th>
-              <th>
                 <!-- Tìm kiếm theo ngày tạo -->
                 Ngày tạo
-                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+
                   <input type="text" nz-input placeholder="search" 
                   [(ngModel)]="ngayTao" [ngModelOptions]="{standalone:true}" />
-                </nz-input-group>
-                <ng-template #suffixIconButton>
-                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="getByNgayTao()"></span></button>
-                </ng-template>
 
-                <div *ngIf="searchResults.length > 0">
-                  <ul>
-                    <li *ngFor="let result of searchResults">
-                      {{ result.ngayTao }}
-                    </li>
-                  </ul>
-                </div>
-              </th>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="getByNgayTao()"></span></button>
+
               <th>
                 <!-- Tìm kiếm theo ngày cập nhật -->
                 Ngày cập nhật
@@ -152,7 +137,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let data of fixedTable.data">
+            <tr *ngFor="let data of searchResults">
               <td nzLeft>{{ data.idThongSo }}</td> <!--STT-->
               <td nzLeft>{{ data.maThongSo }}</td><!--code_parameter-->
               <td>{{ data.tenThongSo }}</td><!--name_parameter-->

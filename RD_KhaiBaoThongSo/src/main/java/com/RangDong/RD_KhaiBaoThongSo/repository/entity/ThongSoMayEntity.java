@@ -12,13 +12,19 @@ public class ThongSoMayEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idThongSoThietBi;
 
+    @Column(name = "id_thiet_bi")
+    private Integer idThietBi;
+
+    @Column(name = "id_Thong_so")
+    private Integer idThongSo;
+
     @Column(name = "ma_thiet_bi")
     private String maThietBi;
 
     @Column(name = "loai_thiet_bi")
     private String loaiThietBi;
 
-    @Column(name = "rows")
+    @Column(name = "hang_tms")
     private Integer rows;
 
     @Column(name = "thong_so")
@@ -27,7 +33,7 @@ public class ThongSoMayEntity {
     @Column(name = "mo_ta")
     private String moTa;
 
-    @Column(name = "status")
+    @Column(name = "trang_thai")
     private String status;
 
     @Column(name = "phan_loai")

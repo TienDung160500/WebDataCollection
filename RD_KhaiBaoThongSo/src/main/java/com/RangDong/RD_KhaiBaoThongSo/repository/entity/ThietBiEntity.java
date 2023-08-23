@@ -3,6 +3,7 @@ package com.RangDong.RD_KhaiBaoThongSo.repository.entity;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Data;
+import org.springframework.data.annotation.Reference;
 
 import java.util.Date;
 
@@ -24,9 +25,15 @@ public class ThietBiEntity {
     @Column(name = "day_chuyen")
     private String dayChuyen;
 
-    @Column(name = "ngay_hoat_dong")
-    private Date ngayHoatDong;
+    @Column(name = "ngay_tao")
+    private Date ngayTao;
 
-    @Column(name = "create_by")
-    private String createBy;
+    @Column(name = "time_update")
+    private Date timeUpdate;
+
+    @Column(name = "update_by")
+    private String updateBy;
+
+    @Column(name = "status")
+    private String status;
 }

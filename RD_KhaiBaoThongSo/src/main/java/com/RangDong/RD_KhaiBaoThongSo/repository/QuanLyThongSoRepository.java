@@ -14,12 +14,15 @@ public interface QuanLyThongSoRepository extends JpaRepository<QuanLyThongSoEnti
     //----------------------- Template Quản lý thông số ----------------
     //------------- Tìm kiếm theo mã thông số ----------------- (ok)
     @Query("SELECT quan_ly_thong_so FROM QuanLyThongSoEntity" +
-            " quan_ly_thong_so WHERE quan_ly_thong_so.maThongSo = :m")
+            " quan_ly_thong_so WHERE quan_ly_thong_so.maThongSo like (%:m%)")
+    public List<QuanLyThongSoEntity> getByListMaThongSo(@Param("m")String maThongSo);
+    @Query("SELECT quan_ly_thong_so FROM QuanLyThongSoEntity" +
+            " quan_ly_thong_so WHERE quan_ly_thong_so.maThongSo like (%:m%)")
     public QuanLyThongSoEntity getByMaThongSo(@Param("m")String maThongSo);
     //------------- Tìm kiếm theo tên thông số -----------------(ok)
     @Query("SELECT quan_ly_thong_so FROM QuanLyThongSoEntity" +
-            " quan_ly_thong_so WHERE quan_ly_thong_so.tenThongSo = :m ")
-    public QuanLyThongSoEntity getByTenThongSo(@Param("m") String tenThongSo);
+            " quan_ly_thong_so WHERE quan_ly_thong_so.tenThongSo like %:m% ")
+    public List<QuanLyThongSoEntity> getByTenThongSo(@Param("m") String tenThongSo);
     //------------- Tìm kiếm theo ngày tạo -----------------(ok)
     @Query("SELECT quan_ly_thong_so FROM QuanLyThongSoEntity" +
             " quan_ly_thong_so WHERE quan_ly_thong_so.ngayTao like %:m%")
@@ -36,9 +39,6 @@ public interface QuanLyThongSoRepository extends JpaRepository<QuanLyThongSoEnti
     @Query("SELECT quan_ly_thong_so FROM QuanLyThongSoEntity " +
             " quan_ly_thong_so WHERE quan_ly_thong_so.status = :m")
     public List<QuanLyThongSoEntity> getByStatus(@Param("m")String status);
-    //------------- Xoá thông số theo mã thông số -----------------
-    @Query("DELETE FROM QuanLyThongSoEntity" +
-            " quan_ly_thong_so WHERE quan_ly_thong_so.maThongSo =:m")
-    public void delByMaThongSo(@Param("m")String maThongSo);//  không sử dụng được
+
 
 }
