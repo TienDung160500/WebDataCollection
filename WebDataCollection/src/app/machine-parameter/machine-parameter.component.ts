@@ -1,50 +1,14 @@
-import { DataService } from './../data.service';
-import { Component } from '@angular/core';
 import { NzButtonSize } from 'ng-zorro-antd/button';
-
-interface ItemData {
-  STT: string;
-  code_parameter: number;
-  name_parameter: string;
-  date: string;
-  username: string;
-}
+import { DataService } from './../data.service';
+import { ItemData } from './../item-data';
+import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-welcome-content',
-  templateUrl: './welcome-content.component.html',
-  styleUrls: ['./welcome-content.component.css']
+  selector: 'app-machine-parameter',
+  templateUrl: './machine-parameter.component.html',
+  styleUrls: ['./machine-parameter.component.css']
 })
-
-export class WelcomeContentComponent {
-
-  // // Create
-  // addNewItem(newItem: Item): Observable<Item> { 
-  //   return this.http.post<Item>(`${this.apiUrl}/items`, newItem);
-  // }
-
-  // // Read
-  // // Get a list of items
-  // getItem(): Observable<Item[]> { 
-  //   return this.http.get<Item[]>(`${this.apiUrl}/items`);
-  // }
-  // // Get a single item of ID
-  // getItemByID(id: number): Observable<Item> { 
-  //   return this.http.get<Item>(`${this.apiUrl}/items/${id}`)
-  // }
-
-  // // Update
-  // updateItem(updateItem: Item): Observable<Item> { 
-  //   return this.http.put<Item>(`${this.apiUrl}/items/${updateItem.id}`, updateItem);
-  // }
-
-  // // Delete
-  // deleteItem(id: number): Observable<void> { 
-  //   return this.http.delete<void>(`${this.apiUrl}/items/${id}`)
-  // }
-
-
-  isCollapsed = false;
+export class MachineParameterComponent {
 
   searchTerm: string = '';
 
@@ -56,17 +20,6 @@ export class WelcomeContentComponent {
   search() {
     this.searchResults = this.dataService.search(this.searchTerm);
   }
-
-
-  // private data: ItemData[] {
-    
-  // }
-
-  // getData: ItemData[] {
-  // return this.listOfData;
-  // }
-
-
 
   ngOnInit(): void {
     for (let i = 1; i <= 100; i++) {
@@ -158,5 +111,4 @@ export class WelcomeContentComponent {
       description: 'My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.'
     }
   ];
-
 }

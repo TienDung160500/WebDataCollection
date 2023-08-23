@@ -1,0 +1,72 @@
+.logo {
+  height: 32px;
+  margin: 16px;
+  background-image: url("../../assets/images/logo.webp");
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+
+nz-header {
+  background: #fff;
+  padding: 0;
+}
+
+nz-header p {
+  color: #f00;
+  text-align: center;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-transform: uppercase;
+}
+
+nz-content {
+  margin: 0 16px;
+}
+
+nz-breadcrumb {
+  margin: 16px 0;
+}
+
+.inner-content {
+  padding: 12px;
+  background: #fff;
+  min-height: 805px;
+}
+
+nz-footer {
+  text-align: center;
+}
+
+.btn-parameter-delete,
+.btn-parameter-edit {
+  border: none;
+  cursor: pointer;
+}
+
+.btn-parameter-edit {
+  margin-right: 15px;
+}
+
+.btn-parameter-delete:hover {
+  background-color: #f00;
+  color: #fff;
+}
+
+[nz-button] {
+  margin-bottom: 12px;
+}
+
+nz-button-group [nz-button] {
+  margin-right: 0;
+}
+
+nz-modal {
+  width: 80% !important;
+  transform: unset !important;
+}
+
+nz-table {
+  width: 100%;
+}

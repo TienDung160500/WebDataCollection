@@ -1,3 +1,5 @@
+import { HomePageComponent } from './home-page/home-page.component';
+import { MachineParameterComponent } from './machine-parameter/machine-parameter.component';
 // import { SearchComponent } from './search/search.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -103,6 +105,8 @@ registerLocaleData(en);
     LoginComponent,
     WelcomeContentComponent,
     // SearchComponent,
+    MachineParameterComponent,
+    HomePageComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,1 +1,34 @@
-<p>home-page works!</p>
+<nz-layout>
+  <nz-sider nzCollapsible nzWidth="200px">
+    <div class="logo"></div>
+    <ul nz-menu nzTheme="dark" nzMode="inline">
+      <li nz-menu-item>
+        <span nz-icon nzType="home" nzTheme="outline"></span>
+        <span>Trang chủ</span>
+      </li>
+
+      <li nz-submenu nzTitle="Quản lý thông số" nzIcon="control">
+        <ul>
+          <li nz-menu-item>Thông số máy
+            <a routerLink="/welcome"></a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Quản lý kịch bản" nzIcon="setting">
+        <ul>
+          <li nz-menu-item>Danh sách kịch bản
+            <a routerLink="/machine"></a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Sản xuất hàng ngày" nzIcon="folder-open">
+        <ul>
+          <li nz-menu-item>Thông tin</li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <p>công ty cổ phần bóng đèn phích nước rạng đông</p>
+    </nz-header>
