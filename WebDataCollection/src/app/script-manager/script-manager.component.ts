@@ -1,25 +1,24 @@
-import { NzButtonSize } from 'ng-zorro-antd/button';
 import { DataService } from './../data.service';
 import { ItemData } from './../item-data';
+import { NzButtonSize } from 'ng-zorro-antd/button';
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-machine-parameter',
-  templateUrl: './machine-parameter.component.html',
-  styleUrls: ['./machine-parameter.component.css']
+  selector: 'app-script-manager',
+  templateUrl: './script-manager.component.html',
+  styleUrls: ['./script-manager.component.css']
 })
-export class MachineParameterComponent {
-
-  searchTerm: string = '';
+export class ScriptManagerComponent {
+searchTerm: string = '';
 
   listOfData: ItemData[] = [];
   searchResults: ItemData[] = [];
 
   constructor(private dataService: DataService) { }
 
-  // search() {
-  //   this.searchResults = this.dataService.search(this.searchTerm);
-  // }
+  search() {
+    this.searchResults = this.dataService.search(this.searchTerm);
+  }
 
   ngOnInit(): void {
     for (let i = 1; i <= 100; i++) {
@@ -73,6 +72,10 @@ export class MachineParameterComponent {
 
   size: NzButtonSize = 'large';
 
+  // search() {
+  //   console.log('searching...', this.searchTerm);
+  // }
+
   expandSet = new Set<number>();
   onExpandChange(id: number, checked: boolean): void {
     if (checked) {
@@ -107,11 +110,5 @@ export class MachineParameterComponent {
       description: 'My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.'
     }
   ];
-}
-export interface ItemData1 {
-  STT: number,
-  code_parameter: number,
-  name_parameter: string,
-  date: string,
-  username: string,
+
 }
