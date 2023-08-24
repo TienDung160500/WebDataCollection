@@ -16,9 +16,9 @@ searchTerm: string = '';
 
   constructor(private dataService: DataService) { }
 
-  search() {
-    this.searchResults = this.dataService.search(this.searchTerm);
-  }
+  // search() {
+  //   this.searchResults = this.dataService.search(this.searchTerm);
+  // }
 
   ngOnInit(): void {
     for (let i = 1; i <= 100; i++) {

@@ -31,7 +31,7 @@ export class LoginComponent {
       console.log(this.loginObj);
     if (this.message === 'Đăng nhập thành công') { 
     console.log(Date.now())
-      this.router.navigate(['/welcome']);
+      this.router.navigate(['/home']);
       alert('Đăng nhập thành công')
     } else if(this.message === 'Tài khoản hoặc mật khẩu bị sai') {
       alert('Tài khoản hoặc mật khẩu bị sai')
