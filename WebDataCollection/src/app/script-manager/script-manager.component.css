@@ -67,6 +67,6 @@ nz-modal {
   transform: unset !important;
 }
 
-nz-table {
-  width: 100%;
+.custom-modal {
+  max-width: 800px !important;
 }

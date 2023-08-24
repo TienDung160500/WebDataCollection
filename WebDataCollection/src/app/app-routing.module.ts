@@ -1,3 +1,4 @@
+import { ScriptManagerComponent } from './script-manager/script-manager.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { MachineParameterComponent } from './machine-parameter/machine-parameter.component';
 import { LoginComponent } from './login/login.component';
@@ -20,12 +21,16 @@ const routes: Routes = [
     component: LoginComponent
   },
   {
-    path: 'welcome',
+    path: 'thong-so-may',
     component: WelcomeContentComponent
   },
   {
-    path: 'machine',
+    path: 'thong-so-ky-thuat',
     component: MachineParameterComponent
+  },
+  {
+    path: "quan-ly-kich-ban",
+    component: ScriptManagerComponent
   }
 ];
 

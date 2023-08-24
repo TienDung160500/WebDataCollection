@@ -1,3 +1,4 @@
+import { ScriptManagerComponent } from './script-manager/script-manager.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { MachineParameterComponent } from './machine-parameter/machine-parameter.component';
 // import { SearchComponent } from './search/search.component';
@@ -107,6 +108,7 @@ registerLocaleData(en);
     // SearchComponent,
     MachineParameterComponent,
     HomePageComponent,
+    ScriptManagerComponent,
   ],
   imports: [
     BrowserModule,

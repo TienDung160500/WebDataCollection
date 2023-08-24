@@ -10,14 +10,17 @@
       <li nz-submenu nzTitle="Quản lý thông số" nzIcon="control">
         <ul>
           <li nz-menu-item>Thông số máy
-            <a routerLink="/welcome"></a>
+            <a routerLink="/thong-so-may"></a>
+          </li>
+          <li nz-menu-item>Thông số kỹ thuật
+            <a routerLink="/thong-so-ky-thuat"></a>
           </li>
         </ul>
       </li>
       <li nz-submenu nzTitle="Quản lý kịch bản" nzIcon="setting">
         <ul>
           <li nz-menu-item>Danh sách kịch bản
-            <a routerLink="/machine"></a>
+            <a routerLink="/quan-ly-kich-ban"></a>
           </li>
         </ul>
       </li>
@@ -47,20 +50,20 @@
         </button>
         <!-- popup khai báo thông số máy -->
         <nz-modal [(nzVisible)]="isVisibleMiddle" nzTitle="Khai báo thông số máy" nzCentered
-          (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
+          (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()" class="custom-modal">
           <ng-container *nzModalContent>
             <form action="">
               <input nz-input placeholder="Mã máy" nzSize="default" style="width: 40%" />
               <input nz-input placeholder="Loại máy" nzSize="default"
                 style="width: 40%; right: 20px; position: absolute;" />
             </form>
-            <nz-table #nzTable [nzData]="listOfData1" nzTableLayout="fixed">
+            <nz-table #nzTable [nzData]="listOfData1" nzTableLayout="fixed" style="width: 100%;">
               <thead>
                 <tr>
                   <th nzWidth="60px"></th>
                   <th>Thông số</th>
-                  <th>Mã thông số</th>
                   <th>Trạng thái</th>
+                  <th>Phân loại</th>
                   <th>Tùy chọn</th>
                 </tr>
               </thead>
@@ -70,7 +73,12 @@
                     <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
                     <td>{{ data.name }}</td>
                     <td>{{ data.age }}</td>
-                    <td>{{ data.address }}</td>
+                    <td><nz-input-group nzCompact>
+                      <nz-select [ngModel]="'Thông số sản phẩm'">
+                        <nz-option [nzLabel]="'Thông số sản phẩm'" [nzValue]="'Thông số sản phẩm'"></nz-option>
+                        <nz-option [nzLabel]="'Thông số máy'" [nzValue]="'Thông số máy'"></nz-option>
+                      </nz-select>
+                    </nz-input-group></td>
                     <td>{{ data.name }}</td>
                   </tr>
                   <tr [nzExpand]="expandSet.has(data.id)">
@@ -95,14 +103,6 @@
                 <ng-template #suffixIconButton>
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
                 </ng-template>
-
-                <div *ngIf="searchResults.length > 0">
-                  <ul>
-                    <li *ngFor="let result of searchResults">
-                      {{ result.code_parameter }}
-                    </li>
-                  </ul>
-                </div>
               </th>
               <th>
                 Loại thiết bị
@@ -112,14 +112,6 @@
                 <ng-template #suffixIconButton>
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
                 </ng-template>
-
-                <div *ngIf="searchResults.length > 0">
-                  <ul>
-                    <li *ngFor="let result of searchResults">
-                      {{ result.name_parameter }}
-                    </li>
-                  </ul>
-                </div>
               </th>
               <th>
                 Dây chuyền
@@ -129,14 +121,6 @@
                 <ng-template #suffixIconButton>
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
                 </ng-template>
-
-                <div *ngIf="searchResults.length > 0">
-                  <ul>
-                    <li *ngFor="let result of searchResults">
-                      {{ result.username }}
-                    </li>
-                  </ul>
-                </div>
               </th>
               <th>
                 Trạng thái
@@ -146,14 +130,6 @@
                 <ng-template #suffixIconButton>
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
                 </ng-template>
-
-                <div *ngIf="searchResults.length > 0">
-                  <ul>
-                    <li *ngFor="let result of searchResults">
-                      {{ result.date }}
-                    </li>
-                  </ul>
-                </div>
               </th>
               <th>
                 Ngày tạo
@@ -163,14 +139,6 @@
                 <ng-template #suffixIconButton>
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
                 </ng-template>
-
-                <div *ngIf="searchResults.length > 0">
-                  <ul>
-                    <li *ngFor="let result of searchResults">
-                      {{ result.date }}
-                    </li>
-                  </ul>
-                </div>
               </th>
               <th>
                 Ngày cập nhật

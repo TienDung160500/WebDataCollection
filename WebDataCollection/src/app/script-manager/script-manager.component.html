@@ -6,11 +6,11 @@
         <span nz-icon nzType="home" nzTheme="outline"></span>
         <span>Trang chủ</span>
       </li>
-      
+
       <li nz-submenu nzTitle="Quản lý thông số" nzIcon="control">
         <ul>
           <li nz-menu-item>Thông số máy
-              <a routerLink="/thong-so-may"></a>
+            <a routerLink="/thong-so-may"></a>
           </li>
           <li nz-menu-item>Thông số kỹ thuật
             <a routerLink="/thong-so-ky-thuat"></a>
@@ -40,43 +40,57 @@
       <nz-breadcrumb>
         <nz-breadcrumb-item>Quản lý thông số</nz-breadcrumb-item>
         <nz-breadcrumb-item>Thông số máy</nz-breadcrumb-item>
-        <button nz-button nzType="primary" (click)="showModalMiddle()" 
-        style="position: absolute; right: 60px;">Thêm mới
+
+        <button nz-button nzType="primary" (click)="showModalMiddle()" style="position: absolute; right: 200px;">Thông
+          tin
+          <span nz-icon nzType="eye" nzTheme="outline"></span>
+        </button>
+
+        <button nz-button nzType="primary" (click)="showModalMiddle()" style="position: absolute; right: 60px;">Thêm mới
           <span nz-icon nzType="plus" nzTheme="outline"></span>
         </button>
         <!-- popup khai báo thông số máy -->
         <nz-modal [(nzVisible)]="isVisibleMiddle" nzTitle="Khai báo thông số máy" nzCentered
-          (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
+          (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()" class="custom-modal">
           <ng-container *nzModalContent>
             <form action="">
-              <input nz-input placeholder="Mã máy" nzSize="default" style="width: 40%"/>
-              <input nz-input placeholder="Loại máy" nzSize="default" style="width: 40%; right: 20px; position: absolute;"/>
+              <input nz-input placeholder="Mã sản phẩm" nzSize="default" style="width: 40%" />
+              <input nz-input placeholder="Tên sản phẩm" nzSize="default" style="width: 40%" />
+
+              <input nz-input placeholder="Mã máy" nzSize="default" style="width: 40%" />
+              <input nz-input placeholder="Loại máy" nzSize="default"
+                style="width: 40%; right: 20px; position: absolute;" />
             </form>
-            <nz-table #nzTable [nzData]="listOfData1" nzTableLayout="fixed">
-      <thead>
-        <tr>
-          <th nzWidth="60px"></th>
-          <th>Thông số</th>
-          <th>Mã thông số</th>
-          <th>Trạng thái</th>
-          <th>Tùy chọn</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let data of nzTable.data">
-          <tr>
-            <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
-            <td>{{ data.name }}</td>
-            <td>{{ data.age }}</td>
-            <td>{{ data.address }}</td>
-            <td>{{ data.name }}</td>
-          </tr>
-          <tr [nzExpand]="expandSet.has(data.id)">
-            <span>{{ data.description }}</span>
-          </tr>
+            <nz-table #nzTable [nzData]="listOfData1" nzTableLayout="fixed" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th nzWidth="60px"></th>
+                  <th>Thông số</th>
+                  <th>Trạng thái</th>
+                  <th>Phân loại</th>
+                  <th>Tùy chọn</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let data of nzTable.data">
+                  <tr>
+                    <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+                    <td>{{ data.name }}</td>
+                    <td>{{ data.age }}</td>
+                    <td><nz-input-group nzCompact>
+                        <nz-select [ngModel]="'Thông số sản phẩm'">
+                          <nz-option [nzLabel]="'Thông số sản phẩm'" [nzValue]="'Thông số sản phẩm'"></nz-option>
+                          <nz-option [nzLabel]="'Thông số máy'" [nzValue]="'Thông số máy'"></nz-option>
+                        </nz-select>
+                      </nz-input-group></td>
+                    <td>{{ data.name }}</td>
+                  </tr>
+                  <tr [nzExpand]="expandSet.has(data.id)">
+                    <span>{{ data.description }}</span>
+                  </tr>
                 </ng-container>
-            </tbody>
-          </nz-table>
+              </tbody>
+            </nz-table>
           </ng-container>
         </nz-modal>
       </nz-breadcrumb>
@@ -86,72 +100,40 @@
             <tr>
               <th nzLeft>STT</th>
               <th nzLeft>
-                Mã thông số 
+                Mã kịch bản
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
                   <input type="text" nz-input placeholder="search" />
                 </nz-input-group>
                 <ng-template #suffixIconButton>
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
                 </ng-template>
-
-                <div *ngIf="searchResults.length > 0">
-                  <ul>
-                    <li *ngFor="let result of searchResults">
-                      {{ result.code_parameter }}
-                    </li>
-                  </ul>
-                </div>
               </th>
               <th>
-                Tên thông số
+                Tên sản phẩm
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
                   <input type="text" nz-input placeholder="search" />
                 </nz-input-group>
                 <ng-template #suffixIconButton>
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
                 </ng-template>
-
-                <div *ngIf="searchResults.length > 0">
-                  <ul>
-                    <li *ngFor="let result of searchResults">
-                      {{ result.name_parameter }}
-                    </li>
-                  </ul>
-                </div>
               </th>
               <th>
-                Ngày tạo
+                Creat at
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
                   <input type="text" nz-input placeholder="search" />
                 </nz-input-group>
                 <ng-template #suffixIconButton>
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
                 </ng-template>
-
-                <div *ngIf="searchResults.length > 0">
-                  <ul>
-                    <li *ngFor="let result of searchResults">
-                      {{ result.date }}
-                    </li>
-                  </ul>
-                </div>
               </th>
               <th>
-                Ngày cập nhật
+                Thời gian cập nhật
                 <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
                   <input type="text" nz-input placeholder="search" />
                 </nz-input-group>
                 <ng-template #suffixIconButton>
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
                 </ng-template>
-
-                <div *ngIf="searchResults.length > 0">
-                  <ul>
-                    <li *ngFor="let result of searchResults">
-                      {{ result.date }}
-                    </li>
-                  </ul>
-                </div>
               </th>
               <th>
                 Cập nhật bởi
@@ -161,14 +143,6 @@
                 <ng-template #suffixIconButton>
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
                 </ng-template>
-
-                <div *ngIf="searchResults.length > 0">
-                  <ul>
-                    <li *ngFor="let result of searchResults">
-                      {{ result.username }}
-                    </li>
-                  </ul>
-                </div>
               </th>
               <th>
                 Trạng thái
@@ -203,12 +177,9 @@
           </tbody>
         </nz-table>
       </div>
-      <button 
-      nz-button [nzSize]="size" 
-      nzType="primary" 
-      style="position: absolute; right: 100px;">
-      Xác nhận
-    </button>
+      <button nz-button [nzSize]="size" nzType="primary" style="position: absolute; right: 100px;">
+        Xác nhận
+      </button>
     </nz-content>
   </nz-layout>
 </nz-layout>
