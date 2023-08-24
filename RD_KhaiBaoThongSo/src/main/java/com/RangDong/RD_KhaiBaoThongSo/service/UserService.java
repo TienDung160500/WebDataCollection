@@ -80,7 +80,7 @@ public class UserService {
 
     //------------- Tìm kiếm theo mã thông số -----------------(ok)
     public List<QuanLyThongSoResponse> getByMaThongSo(String maThongSo) {
-        List<QuanLyThongSoEntity> entities = this.quanLyThongSoRepository.getByListMaThongSo(maThongSo);
+        List<QuanLyThongSoEntity> entities = this.quanLyThongSoRepository.findAllByMaThongSo(maThongSo);
         List<QuanLyThongSoResponse> responseList = new ArrayList<>();
         if (entities.isEmpty()) {
             return null;
@@ -211,6 +211,21 @@ public class UserService {
         this.quanLyThongSoRepository.save(entity);
         log.info("Cap nhat thanh cong !");
         return "Cap nhat thanh cong !";
+    }
+
+    //------------------------------- su kien tim kiem -----------------------------------
+    public List<QuanLyThongSoResponse> timKiemThongSo(QuanLyThongSoRequest request){
+        var entities = this.quanLyThongSoRepository.timKiemThongSo(
+                request.getMaThongSo(), request.getTenThongSo(), request.getNgayTao(),request.getTimeUpdate(),
+                request.getUpdateBy(), request.getStatus());
+        log.info("Dang tim kiem  ----------"+ request);
+        List<QuanLyThongSoResponse> responseList = new ArrayList<>();
+        for (QuanLyThongSoEntity entity : entities){
+            QuanLyThongSoResponse response = getQuanLyThongSoResponse(entity);
+            log.info("response:   ", response);
+            responseList.add(response);
+        }
+        return responseList;
     }
 
     //==================================================================================================================
@@ -373,15 +388,31 @@ public class UserService {
         return "cai dat thong so thiet bi thanh cong !";
     }
     //---------------------------- del thông số thiết bị --------------------------------(chưa làm được)
-    public void delByTenThongSoMay(String tenThongSo){
-        ThongSoMayEntity entity = this.thongSoMayRepository.getByTenThongSoMay(tenThongSo);
+    public void delByIdThongSoThietBi(Integer idThongSoThietBi){
+        ThongSoMayEntity entity = this.thongSoMayRepository.findById(idThongSoThietBi).orElse(null);
         if (entity == null){
             String result = "khong tim thay thong so";
+            log.info(result);
         }else {
             this.thongSoMayRepository.delete(entity);
             String result = "xoa thong so may thanh cong";
+            log.info(result);
         }
     }
     //-------------------------- cập nhật thông số máy ------------------------ ( chưa làm được )
-    //-------------------------- xem chi tiết thông số --------------------------
+    //-------------------------- xem chi tiết thông số --------------------------(chưa làm được)
+    public List<QuanLyThongSoResponse> getChiTietThongSoMay(String phanLoai){
+        List<QuanLyThongSoEntity> entities = this.thongSoMayRepository.getChiTietThongSoMay(phanLoai);
+        List<QuanLyThongSoResponse> responseList = new ArrayList<>();
+        log.info("hello");
+        for (QuanLyThongSoEntity entity : entities){
+            QuanLyThongSoResponse response = new QuanLyThongSoResponse();
+            response.setTenThongSo(entity.getTenThongSo());
+            response.setStatus(entity.getStatus());
+            response.setNgayTao(entity.getNgayTao());
+            response.setTimeUpdate(entity.getTimeUpdate());
+            responseList.add(response);
+        }
+        return responseList;
+    }
 }

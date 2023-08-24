@@ -104,6 +104,12 @@ public class UserController {
         String result = this.userService.putThongSo(request, maThongSo);
         return result;
     }
+    //--------------------------- su kien tim kiem ---------------------------------
+    @PostMapping("/quan-ly-thong-so/tim-kiem")
+    public List<QuanLyThongSoResponse> timKiemThongSo(@RequestBody QuanLyThongSoRequest request){
+        List<QuanLyThongSoResponse> responseList = this.userService.timKiemThongSo(request);
+        return responseList;
+    }
 
     //=================================================================================================================
     //----------------------------------------                   ------------------------------------------------------
@@ -175,6 +181,17 @@ public class UserController {
     public String postThongSoMay(@RequestBody List<ThongSoMayRequest> requestList){
         String result = this.userService.postThongSoMay(requestList);
         return  result;
+    }
+    //-------------------------------- del thông số thiết bị -----------------------------------
+    @DeleteMapping("/thiet-bi/del-thong-so-may/{idThongSoThietBi}")
+    public void delByIdThongSoThietBi(@PathVariable Integer idThongSoThietBi){
+        this.userService.delByIdThongSoThietBi(idThongSoThietBi);
+    }
+    //-------------------------- xem chi tiết thông số --------------------------(chưa làm được)
+    @GetMapping("/thiet-bi/chi-tiet-thong-so-may/{maThietBi}")
+    public List<QuanLyThongSoResponse> getChiTietThongSoMay(@PathVariable String maThietBi){
+        List<QuanLyThongSoResponse> responseList = this.userService.getChiTietThongSoMay(maThietBi);
+        return responseList;
     }
 
 }

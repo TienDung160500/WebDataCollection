@@ -24,6 +24,7 @@ export class DataService {
       item.updateBy.toLowerCase().includes(term)||
       item.status.toLowerCase().includes(term)
     );
+    
   }
   constructor() { }
 }
@@ -33,6 +34,15 @@ export interface ItemData {
   tenThongSo: string
   ngayTao: Date
   timeUpdate: Date
+  updateBy: string
+  status: string
+}
+export interface ItemDataRequest{
+  maThongSo: string
+  tenThongSo: string
+  mota:string
+  ngayTao: number
+  timeUpdate: number
   updateBy: string
   status: string
 }
