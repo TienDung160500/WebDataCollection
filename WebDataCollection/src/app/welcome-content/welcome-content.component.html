@@ -1,4 +1,4 @@
-<a routerLink="/home"></a>
+<a routerLink="/thong-so-may"></a>
 <nz-layout>
   <nz-sider nzCollapsible nzWidth="200px">
     <div class="logo"></div>
@@ -7,12 +7,12 @@
         <span nz-icon nzType="home" nzTheme="outline"></span>
         <span>Trang chủ</span>
       </li>
-      
+
       <li nz-submenu nzTitle="Quản lý thông số" nzIcon="control">
         <ul>
 
           <li nz-menu-item>Thông số máy
-              <a routerLink="/thong-so-may"></a>
+            <a routerLink="/thong-so-may"></a>
           </li>
           <li nz-menu-item>Thông số kỹ thuật
             <a routerLink="/thong-so-ky-thuat"></a>
@@ -45,41 +45,43 @@
         <button nz-button [nzSize]="size" nzType="primary" style="margin-left: 1180px;">Thêm mới
           <span nz-icon nzType="plus" nzTheme="outline"></span>
         </button>
-          <!-- popup khai báo thông số máy -->
-        <!-- <nz-modal [(nzVisible)]="isVisibleMiddle" nzTitle="Khai báo thông số máy" nzCentered
+        <!--------------------------------------------------- popup khai báo thông số máy -------------------------------------------------------------------->
+        <nz-modal [(nzVisible)]="isVisibleMiddle" nzTitle="Khai báo thông số máy" nzCentered
           (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
           <ng-container *nzModalContent>
             <form action="">
-              <input nz-input placeholder="Mã máy" nzSize="default" style="width: 40%"/>
-              <input nz-input placeholder="Loại máy" nzSize="default" style="width: 40%; right: 20px; position: absolute;"/>
+              <input nz-input placeholder="Mã máy" nzSize="default" style="width: 40%" />
+              <input nz-input placeholder="Loại máy" nzSize="default"
+                style="width: 40%; right: 20px; position: absolute;" />
             </form>
             <nz-table #nzTable [nzData]="listOfData1" nzTableLayout="fixed">
-      <thead>
-        <tr>
-          <th nzWidth="60px"></th>
-          <th>Thông số</th>
-          <th>Mã thông số</th>
-          <th>Trạng thái</th>
-          <th>Tùy chọn</th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngFor="let data of nzTable.data">
-          <tr>
-            <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
-            <td>{{ data.name }}</td>
-            <td>{{ data.age }}</td>
-            <td>{{ data.address }}</td>
-            <td>{{ data.name }}</td>
-          </tr>
-          <tr [nzExpand]="expandSet.has(data.id)">
-            <span>{{ data.description }}</span>
-          </tr>
+              <thead>
+                <tr>
+                  <th nzWidth="60px"></th>
+                  <th>Thông số</th>
+                  <th>Mã thông số</th>
+                  <th>Trạng thái</th>
+                  <th>Tùy chọn</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let data of nzTable.data">
+                  <tr>
+                    <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
+                    <td>{{ data.name }}</td>
+                    <td>{{ data.age }}</td>
+                    <td>{{ data.address }}</td>
+                    <td>{{ data.name }}</td>
+                  </tr>
+                  <tr [nzExpand]="expandSet.has(data.id)">
+                    <span>{{ data.description }}</span>
+                  </tr>
                 </ng-container>
-            </tbody>
-          </nz-table>
+              </tbody>
+            </nz-table>
           </ng-container>
-        </nz-modal> -->
+        </nz-modal>
+        <!-- --------------------------------------------------------------------Tìm kiếm   ----------------------------------------------------------------------------->
       </nz-breadcrumb>
       <div class="inner-content">
         <nz-table #fixedTable [nzData]="searchResults" [nzScroll]="{ x: '1150px', y: '850px' }">
@@ -88,58 +90,64 @@
               <th nzLeft>STT</th>
               <th nzLeft>
                 <!-- Tìm kiếm theo mã thông số -->
-                Mã thông số 
+                Mã thông số
                 <div class="timkiem">
-                  <input type="text" nz-input placeholder="search"
-                  [(ngModel)]="maThongSo" [ngModelOptions]="{standalone:true}" />
-                  <button nz-button nzType="primary" class="button-timkiem" nzSearch><span nz-icon nzType="search" (click)="getByMaThongSo()"></span></button>
+                  <input type="text" nz-input placeholder="search" [(ngModel)]="maThongSo"
+                    [ngModelOptions]="{standalone:true}" />
+                  <button nz-button nzType="primary" class="button-timkiem" nzSearch><span nz-icon nzType="search"
+                      (click)="timKiemThongSo()"></span></button>
                 </div>
-                </th>
+              </th>
               <th>
                 <!-- Tìm kiếm theo tên thông số -->
                 Tên thông số
                 <div class="timkiem">
-                  <input type="text" nz-input placeholder="search"
-                  [(ngModel)]="tenThongSo" [ngModelOptions]="{standalone:true}"  />
-                  <button nz-button nzType="primary" class="button-timkiem" nzSearch ><span nz-icon nzType="search" (click)="getByTenThongSo()"></span></button>
+                  <input type="text" nz-input placeholder="search" [(ngModel)]="tenThongSo"
+                    [ngModelOptions]="{standalone:true}" />
+                  <button nz-button nzType="primary" class="button-timkiem" nzSearch><span nz-icon nzType="search"
+                      (click)="timKiemThongSo()"></span></button>
                 </div>
-                </th>
+              </th>
               <th>
                 <!-- Tìm kiếm theo ngày tạo -->
                 Ngày tạo
                 <div class="timkiem">
-                  <input type="text" nz-input placeholder="search" 
-                  [(ngModel)]="ngayTao" [ngModelOptions]="{standalone:true}" />
-                  <button nz-button nzType="primary" class="button-timkiem" nzSearch><span nz-icon nzType="search" (click)="getByNgayTao()"></span></button>
+                  <input type="date" nz-input placeholder="search" [(ngModel)]="ngayTao"
+                    [ngModelOptions]="{standalone:true}" />
+                  <button nz-button nzType="primary" class="button-timkiem" nzSearch><span nz-icon nzType="search"
+                      (click)="timKiemThongSo()"></span></button>
                 </div>
-                </th>
+              </th>
               <th>
                 <!-- Tìm kiếm theo ngày cập nhật -->
                 Ngày cập nhật
                 <div class="timkiem">
-                  <input type="text" nz-input placeholder="search" 
-                  [(ngModel)]="timeUpdate" [ngModelOptions]="{standalone:true}" />
-                  <button nz-button nzType="primary" class="button-timkiem" nzSearch><span nz-icon nzType="search" (click)="getByTimeUpdate()"></span></button>
+                  <input type="date" nz-input placeholder="search" [(ngModel)]="timeUpdate"
+                    [ngModelOptions]="{standalone:true}" />
+                  <button nz-button nzType="primary" class="button-timkiem" nzSearch><span nz-icon nzType="search"
+                      (click)="timKiemThongSo()"></span></button>
                 </div>
-                </th>
+              </th>
               <th>
                 <!-- Tìm kiếm theo tài khoản -->
                 Cập nhật bởi
                 <div class="timkiem">
-                  <input type="text" nz-input placeholder="search" 
-                  [(ngModel)]="updateBy" [ngModelOptions]="{standalone:true}" />
-                  <button nz-button nzType="primary" class="button-timkiem" nzSearch><span nz-icon nzType="search" (click)="getByUpdateBy()"></span></button>
+                  <input type="text" nz-input placeholder="search" [(ngModel)]="updateBy"
+                    [ngModelOptions]="{standalone:true}" />
+                  <button nz-button nzType="primary" class="button-timkiem" nzSearch><span nz-icon nzType="search"
+                      (click)="timKiemThongSo()"></span></button>
                 </div>
-                </th>
+              </th>
               <th>
                 <!-- Tìm kiếm theo trạng thái -->
                 Trạng thái
                 <div class="timkiem">
-                  <input type="text" nz-input placeholder="search"
-                  [(ngModel)]="status" [ngModelOptions]="{standalone:true}" />
-                  <button nz-button nzType="primary" class="button-timkiem" nzSearch><span nz-icon nzType="search" (click)="getByStatus()"></span></button>
+                  <input type="text" nz-input placeholder="search" [(ngModel)]="status"
+                    [ngModelOptions]="{standalone:true}" />
+                  <button nz-button nzType="primary" class="button-timkiem" nzSearch><span nz-icon nzType="search"
+                      (click)="timKiemThongSo()"></span></button>
                 </div>
-                </th>
+              </th>
               <th nzRight>Options</th>
             </tr>
           </thead>
@@ -157,19 +165,17 @@
                   <span nz-icon nzType="tool" nzTheme="outline" style="font-size: 30px;"></span>
                 </button>
                 <button class="btn-parameter-delete">
-                  <span nz-icon nzType="delete" nzTheme="outline" style="font-size: 30px;" (click)="delThongSo(data.maThongSo)"></span>
+                  <span nz-icon nzType="delete" nzTheme="outline" style="font-size: 30px;"
+                    (click)="delThongSo(data.maThongSo)"></span>
                 </button>
               </td>
             </tr>
           </tbody>
         </nz-table>
       </div>
-      <button 
-      nz-button [nzSize]="size" 
-      nzType="primary" 
-      style="margin-left: 1500px;margin-top: 15px;">
-      Xác nhận
-    </button>
+      <button nz-button [nzSize]="size" nzType="primary" style="margin-left: 1500px;margin-top: 15px;">
+        Xác nhận
+      </button>
     </nz-content>
   </nz-layout>
 </nz-layout>

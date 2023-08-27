@@ -14,8 +14,8 @@ export class WelcomeContentComponent {
   //---------------------khởi tạo biến lưu giá trị đầu vào tìm kiếm--------------------
   @Input() maThongSo = '';
   @Input() tenThongSo = '';
-  @Input() ngayTao = '';
-  @Input() timeUpdate = '';
+  @Input() ngayTao = null;
+  @Input() timeUpdate = null;
   @Input() updateBy = '';
   @Input() status = '';
   @Input() update = '';
@@ -90,113 +90,6 @@ export class WelcomeContentComponent {
       sessionStorage.setItem('danhSachTatCaThongSo', JSON.stringify(res));
     })
   }
-  //--------------- request lấy danh sách theo mã thông số --------------
-  getByMaThongSo() {
-    //---------- xoá dữ liệu cũ --------------------
-    this.searchResults = [];
-    // kiểm tra xem cache còn lưu giá trị không
-    if (sessionStorage.getItem(this.maThongSo) === null) {
-      this.http.get<any>('http://localhost:8080/quan-ly-thong-so/ma-thong-so/' + this.maThongSo).subscribe(res => {
-        console.log("tương tác với DB:")
-        this.searchResults = res as any;
-        // ------------ lưu vào cache------------ (lưu vào session storage) -aws
-        sessionStorage.setItem(this.maThongSo, JSON.stringify(res));
-      })
-    } else {
-      var result = sessionStorage.getItem(this.maThongSo);
-      if (result) {
-        console.log("lấy từ cache:")
-        this.searchResults = JSON.parse(result);
-      }
-    }
-
-  }
-  //--------------- request lấy danh sách theo tên thông số --------------
-  getByTenThongSo() {
-    this.searchResults = [];
-    if (sessionStorage.getItem(this.tenThongSo) === null) {
-      this.http.get<any>('http://localhost:8080/quan-ly-thong-so/ten-thong-so/' + this.tenThongSo).subscribe(res => {
-        console.log("getByTenThongSo: ", res)
-        //---------------- gán dữ liệu mới  ----------------
-        this.searchResults = res as any;
-        sessionStorage.setItem(this.tenThongSo, JSON.stringify(res));
-      })
-    } else {
-      var result = sessionStorage.getItem(this.tenThongSo);
-      if (result) {
-        console.log("lay tu cache");
-        this.searchResults = JSON.parse(result);
-      }
-    }
-  }
-  //--------------- request lấy danh sách theo ngày tạo --------------
-  getByNgayTao() {
-    this.searchResults = [];
-    if (sessionStorage.getItem(this.ngayTao) === null) {
-      this.http.get<any>('http://localhost:8080/quan-ly-thong-so/ngay-tao/' + this.ngayTao).subscribe(res => {
-        console.log("getByNgayTao: ", res)
-        this.searchResults = res as any;
-        sessionStorage.setItem(this.ngayTao, JSON.stringify(res));
-      })
-    } else {
-      var result = sessionStorage.getItem(this.ngayTao);
-      if (result) {
-        console.log('lay tu cache')
-        this.searchResults = JSON.parse(result);
-      }
-    }
-  }
-  //--------------- request lấy danh sách theo ngày cập nhật --------------
-  getByTimeUpdate() {
-    this.searchResults = [];
-    if (sessionStorage.getItem(this.timeUpdate) === null) {
-      this.http.get<any>('http://localhost:8080/quan-ly-thong-so/ngay-tao/' + this.timeUpdate).subscribe(res => {
-        console.log("getByTimeUpdate: ", res)
-        this.searchResults = res as any;
-        sessionStorage.setItem(this.timeUpdate, JSON.stringify(res));
-      })
-    } else {
-      var result = sessionStorage.getItem(this.timeUpdate);
-      if (result) {
-        console.log('lay tu cache');
-        this.searchResults = JSON.parse(result);
-      }
-    }
-  }
-  //--------------- request lấy danh sách theo tài khoản --------------
-  getByUpdateBy() {
-    this.searchResults = [];
-    if (sessionStorage.getItem(this.updateBy) === null) {
-      this.http.get<any>('http://localhost:8080/quan-ly-thong-so/update-by/' + this.updateBy).subscribe(res => {
-        console.log("getByUpdateBy: ", res)
-        this.searchResults = res as any;
-        sessionStorage.setItem(this.updateBy, JSON.stringify(res));
-      })
-    } else {
-      var result = sessionStorage.getItem(this.updateBy);
-      if (result) {
-        console.log('lay tu cache');
-        this.searchResults = JSON.parse(result);
-      }
-    }
-  }
-  //--------------- request lấy danh sách theo trạng thái (status) --------------
-  getByStatus() {
-    this.searchResults = [];
-    if (sessionStorage.getItem(this.status) === null) {
-      this.http.get<any>('http://localhost:8080/quan-ly-thong-so/status/' + this.status).subscribe(res => {
-        console.log("getBystatus: ", res)
-        this.searchResults = res as any;
-        sessionStorage.setItem(this.status, JSON.stringify(res));
-      })
-    } else {
-      var result = sessionStorage.getItem(this.status);
-      if (result) {
-        console.log('lay tu cache')
-        this.searchResults = JSON.parse(result);
-      }
-    }
-  }
   //------------------request del thông số ------------------------
   delThongSo(del: string) {
     //-------------- thêm thông báo xác nhận yêu cầu xoá thông số  --------------
@@ -228,24 +121,60 @@ export class WelcomeContentComponent {
     })
   }
 
-  //------------------------ su kien tim kiem ------------------------------
-
-  timKiemThongSo(){
+   //------------------------ su kien tim kiem ------------------------------
+   timKiemThongSo(){
     this.searchResults = [];
-    if (sessionStorage.getItem('tim kiem') === null) {
-      this.http.post<any>('http://localhost:8080/quan-ly-thong-so/tim-kiem',this.body1).subscribe(res => {
+    var timKiem = {maThongSo:this.maThongSo,tenThongSo:this.tenThongSo,ngayTao:this.ngayTao,timeUpdate:this.timeUpdate,updateBy:this.updateBy,status:this.status}
+      if(sessionStorage.getItem(JSON.stringify(timKiem))=== null){
+      this.http.post<any>('http://localhost:8080/quan-ly-thong-so/tim-kiem',timKiem).subscribe(res => {
         console.log("tim kiem: ", res)
         this.searchResults = res as any;
-        sessionStorage.setItem('tim kiem', JSON.stringify(res));
+        sessionStorage.setItem(JSON.stringify(timKiem),JSON.stringify(res));
       })
-    } else {
-      var result = sessionStorage.getItem('tim kiem');
+    }else{
+      var result = sessionStorage.getItem(JSON.stringify(timKiem));
       if (result) {
         console.log('lay tu cache')
+        console.log("ma thong so: ", timKiem)
         this.searchResults = JSON.parse(result);
-      }
     }
   }
+}
+expandSet = new Set<number>();
+  onExpandChange(id: number, checked: boolean): void {
+    if (checked) {
+      this.expandSet.add(id);
+    } else {
+      this.expandSet.delete(id);
+    }
+  }
+listOfData1 = [
+  {
+    id: 1,
+    name: 'John Brown',
+    age: 32,
+    expand: false,
+    address: 'New York No. 1 Lake Park',
+    description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.'
+  },
+  {
+    id: 2,
+    name: 'Jim Green',
+    age: 42,
+    expand: false,
+    address: 'London No. 1 Lake Park',
+    description: 'My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park.'
+  },
+  {
+    id: 3,
+    name: 'Joe Black',
+    age: 32,
+    expand: false,
+    address: 'Sidney No. 1 Lake Park',
+    description: 'My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.'
+  }
+];
+
   size: NzButtonSize = 'large';
 
   isVisibleTop = false;

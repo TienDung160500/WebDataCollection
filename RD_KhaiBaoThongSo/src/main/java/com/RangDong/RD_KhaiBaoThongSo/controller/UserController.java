@@ -1,38 +1,41 @@
 package com.RangDong.RD_KhaiBaoThongSo.controller;
 
-import com.RangDong.RD_KhaiBaoThongSo.controller.request.QuanLyThongSoRequest;
-import com.RangDong.RD_KhaiBaoThongSo.controller.request.ThietBiRequest;
-import com.RangDong.RD_KhaiBaoThongSo.controller.request.ThongSoMayRequest;
-import com.RangDong.RD_KhaiBaoThongSo.controller.request.UserPostRequest;
-import com.RangDong.RD_KhaiBaoThongSo.controller.response.QuanLyThongSoResponse;
-import com.RangDong.RD_KhaiBaoThongSo.controller.response.ResponseMessage;
-import com.RangDong.RD_KhaiBaoThongSo.controller.response.ThietBiResponse;
+import com.RangDong.RD_KhaiBaoThongSo.controller.request.*;
+import com.RangDong.RD_KhaiBaoThongSo.controller.response.*;
+import com.RangDong.RD_KhaiBaoThongSo.repository.entity.KichBanEntity;
+import com.RangDong.RD_KhaiBaoThongSo.repository.entity.SanXuatHangNgayEntity;
 import com.RangDong.RD_KhaiBaoThongSo.service.UserService;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
+
+// ! chưa làm được
+// ? Chưa test với front-end
+// * Ngăn cách
+// ☺ đã Test với front-end
 @RestController
 @Slf4j
 public class UserController {
     @Autowired
     private UserService userService;
 
-    //----------------------- Template login - Chức năng xác thực tài khoản------(ok)
+    //☺ Template login - Chức năng xác thực tài khoản
     @PostMapping("/login")
     public ResponseMessage getByName(@RequestBody UserPostRequest request) {
         ResponseMessage result = this.userService.loginAuth(request);
         return result;
     }
+    //------------------------------------------------ * ---------------------------------------------------------------
 
-    //==================================================================================================================
-    //----------------------------------                              --------------------------------------------------
     //---------------------------         Template Quản lý thông số      -----------------------------------------------
-    //--------------------------------------                        ----------------------------------------------------
-    //------------ Hiển thị danh sách thông số -----------------(ok)
+
+    //☺ Hiển thị danh sách thông số
     @GetMapping("/quan-ly-thong-so")
     public List<QuanLyThongSoResponse> danhSachThongSo() {
         List<QuanLyThongSoResponse> responseList = this.userService.danhSachThongSo();
@@ -40,158 +43,178 @@ public class UserController {
         return responseList;
     }
 
-    //------------- Tìm kiếm theo mã thông số -----------------(ok)
     @GetMapping("/quan-ly-thong-so/ma-thong-so/{maThongSo}")
-    public List<QuanLyThongSoResponse> getByMaThongSo(@PathVariable String maThongSo) {
-        List<QuanLyThongSoResponse> response = this.userService.getByMaThongSo(maThongSo);
-        return response;
-    }
-
-    //------------- Tìm kiếm theo tên thông số -----------------(ok)
-    @GetMapping("/quan-ly-thong-so/ten-thong-so/{tenThongSo}")
-    public List<QuanLyThongSoResponse> getByTenThongSo(@PathVariable String tenThongSo) {
-        List<QuanLyThongSoResponse> response = this.userService.getByTenThongSo(tenThongSo);
-        return response;
-    }
-
-    //------------- Tìm kiếm theo ngày tạo -----------------(ok)
-    @GetMapping("/quan-ly-thong-so/ngay-tao/{ngayTao}")
-    public List<QuanLyThongSoResponse> getByNgayTao(@PathVariable String ngayTao) {
-        List<QuanLyThongSoResponse> responseList = this.userService.getByNgayTao(ngayTao);
+    public List<QuanLyThongSoResponse> getByMaThongSo(@PathVariable String maThongSo){
+        List<QuanLyThongSoResponse> responseList = this.userService.getByMaThongSo(maThongSo);
         return responseList;
     }
 
-    //------------- Tìm kiếm theo ngày cập nhật -----------------(ok)
-    @GetMapping("/quan-ly-thong-so/time-update/{timeUpdate}")
-    public List<QuanLyThongSoResponse> getByTimeUpdate(
-            @PathVariable String timeUpdate) {
-        List<QuanLyThongSoResponse> responseList = this.userService.getByTimeUpdate(timeUpdate);
-        return responseList;
-    }
-
-    //------------- Tìm kiếm theo tài khoản khởi tạo thông số -----------------(ok)
-    @GetMapping("/quan-ly-thong-so/update-by/{updateBy}")
-    public List<QuanLyThongSoResponse> getByUpdateBy(@PathVariable String updateBy) {
-        List<QuanLyThongSoResponse> responseList = this.userService.getByUpdateBy(updateBy);
-        return responseList;
-    }
-
-    //------------- Tìm kiếm theo trạng thái (status) -----------------(ok)
-    @GetMapping("/quan-ly-thong-so/status/{status}")
-    public List<QuanLyThongSoResponse> getByStatus(@PathVariable String status) {
-        List<QuanLyThongSoResponse> responseList = this.userService.getByStatus(status);
-        return responseList;
-    }
-
-    //------------- Xoá thông số theo mã thông số -----------------
+    //☺ Xoá thông số theo mã thông số
     @DeleteMapping("/quan-ly-thong-so/del-by-ma-thong-so/{maThongSo}")
     public void delByMaThongSo(@PathVariable String maThongSo) {
         this.userService.delByThongSo(maThongSo);
     }
-
-    //------------- Xoá nhiều thông số theo id thông số -----------------(chua lam duoc)
-    //------------------------ Thêm mới thông số ------------------(ok)
+    //? Thêm mới thông số
     @PostMapping("/quan-ly-thong-so/them-moi-thong-so")
     public String postThongSo(@RequestBody List<QuanLyThongSoRequest> requests) {
         String result = this.userService.postThongSo(requests);
         return result;
     }
-
-    //----------------------- cập nhật thông số ------------------------(ok)
+    //☺ cập nhật thông số
     @PutMapping("/quan-ly-thong-so/cap-nhat-thong-so/{maThongSo}")
     public String putThongSo(@PathVariable String maThongSo,
                              @RequestBody QuanLyThongSoRequest request) {
         String result = this.userService.putThongSo(request, maThongSo);
         return result;
     }
-    //--------------------------- su kien tim kiem ---------------------------------
+    //☺ su kien tim kiem
     @PostMapping("/quan-ly-thong-so/tim-kiem")
     public List<QuanLyThongSoResponse> timKiemThongSo(@RequestBody QuanLyThongSoRequest request){
         List<QuanLyThongSoResponse> responseList = this.userService.timKiemThongSo(request);
         return responseList;
     }
+    //------------------------------------------------ * ---------------------------------------------------------------
 
-    //=================================================================================================================
-    //----------------------------------------                   ------------------------------------------------------
     //--------------------------------             Thiết bị               ---------------------------------------------
-    //-----------------------------------------                  ------------------------------------------------------
-    //------------------------- Hiển thị danh  sách thiết bị ------------------------------(ok)
+
+    //☺ Hiển thị danh  sách thiết bị
     @GetMapping("/thiet-bi")
     public List<ThietBiResponse> danhSachThietBi() {
         List<ThietBiResponse> responseList = this.userService.danhSachThietBi();
         return responseList;
     }
-    //------------------------- Tìm kiếm theo mã thiết bị ------------------------------(ok)
-    @GetMapping("/thiet-bi/ma-thiet-bi/{maThietBi}")
-    public List<ThietBiResponse> getThietBiByMaThietBi(@PathVariable String maThietBi) {
-        List<ThietBiResponse> responseList = this.userService.getThietBiByMaThietBi(maThietBi);
+    //☺ Tìm kiếm
+    @PostMapping("/thiet-bi/tim-kiem")
+    public List<ThietBiResponse> getThietBiByStatus(@RequestBody ThietBiRequest request) {
+        List<ThietBiResponse> responseList = this.userService.timKiemThietBi(request);
         return responseList;
     }
-    //------------------------- Tìm kiếm theo loại thiết bị ------------------------------(ok)
-    @GetMapping("/thiet-bi/loai-thiet-bi/{loaiThietBi}")
-    public List<ThietBiResponse> getThietBiByLoaiThietBi(@PathVariable String loaiThietBi) {
-        List<ThietBiResponse> responseList = this.userService.getThietBiByLoaiThietBi(loaiThietBi);
-        log.info("loai-Thiet-bi");
-        return responseList;
-    }
-    //------------------------- Tìm kiếm theo dây chuyền ------------------------------(ok)
-    @GetMapping("/thiet-bi/day-chuyen/{dayChuyen}")
-    public List<ThietBiResponse> getThietBiByDayChuyen(@PathVariable String dayChuyen) {
-        List<ThietBiResponse> responseList = this.userService.getThietBiByDayChuyen(dayChuyen);
-        return responseList;
-    }
-    //------------------------- Tìm kiếm theo ngày tạo ------------------------------(ok)
-    @GetMapping("/thiet-bi/ngay-tao/{ngayTao}")
-    public List<ThietBiResponse> getThietBiNgayTao(@PathVariable String ngayTao) {
-        List<ThietBiResponse> responseList = this.userService.getThietBiByNgayTao(ngayTao);
-        log.info("ngay-tao");
-        return responseList;
-    }
-    //------------------------- Tìm kiếm theo ngày cập nhật ------------------------------(ok)
-    @GetMapping("/thiet-bi/time-update/{timeUpdate}")
-    public List<ThietBiResponse> getThietBiTimeUpdate(@PathVariable String timeUpdate) {
-        List<ThietBiResponse> responseList = this.userService.getThietBiByTimeUpdate(timeUpdate);
-        log.info("ngay-cap-nhat");
-        return responseList;
-    }
-    //------------------------- Tìm kiếm theo người tạo ------------------------------(ok)
-    @GetMapping("/thiet-bi/update-by/{updateBy}")
-    public List<ThietBiResponse> getThietBiByUpdateBy(@PathVariable String updateBy) {
-        List<ThietBiResponse> responseList = this.userService.getThietBiByUpdateBy(updateBy);
-        log.info("user");
-        return responseList;
-    }
-    //------------------------- Tìm kiếm theo status ------------------------------(ok)
-    @GetMapping("/thiet-bi/status/{status}")
-    public List<ThietBiResponse> getThietBiByStatus(@PathVariable String status) {
-        List<ThietBiResponse> responseList = this.userService.getThietBiByStatus(status);
-        log.info("user");
-        return responseList;
-    }
-    //----------------------------        Thêm mới, cập nhật thông số thiết bị         ---------------------------------
-    //---------------------- Lấy danh sách tên thông số -----------------------------------------(ok)
-    // --------------------------- thêm mới thiết bị vào DB ----------------------------------(ok)
+    //----------------------- Chức năng thêm mới thiết bị -----------------------------------------------
+    //? thêm mới thiết bị vào DB
     @PostMapping("/thiet-bi/them-moi-thiet-bi")
     public String postThietBi (@RequestBody ThietBiRequest request){
         String result = this.userService.postThietBi(request);
         return result;
     }
-    //---------------------------- thêm mới thông số thiết b vào DB --------------------------------
+    //? del thông số thiết bị ->xoá luôn cả thông số thiết bị
+    @DeleteMapping("/thiet-bi/del-thiet-bi/{maThietBi}")
+    public void delThietBi(@PathVariable String maThietBi){
+        this.userService.delThongSoMay(maThietBi);
+    }
+
+    //? thêm mới thông số thiết bị vào DB
     @PostMapping("/thiet-bi/them-moi-thong-so-thiet-bi")
     public String postThongSoMay(@RequestBody List<ThongSoMayRequest> requestList){
         String result = this.userService.postThongSoMay(requestList);
         return  result;
     }
-    //-------------------------------- del thông số thiết bị -----------------------------------
+    //? xem danh sách thông số thiết bị
+    @GetMapping("/thiet-bi/danh-sach-thong-so-thiet-bi/{maThietBi}")
+    public List<ThongSoMayResponse> getDanhSachThongSoMay(@PathVariable String maThietBi){
+        List<ThongSoMayResponse> responseList = this.userService.getDanhSachThongSoThietBi(maThietBi);
+        return responseList;
+    }
+    //? del thông số thiết bị
     @DeleteMapping("/thiet-bi/del-thong-so-may/{idThongSoThietBi}")
     public void delByIdThongSoThietBi(@PathVariable Integer idThongSoThietBi){
         this.userService.delByIdThongSoThietBi(idThongSoThietBi);
     }
-    //-------------------------- xem chi tiết thông số --------------------------(chưa làm được)
-    @GetMapping("/thiet-bi/chi-tiet-thong-so-may/{maThietBi}")
-    public List<QuanLyThongSoResponse> getChiTietThongSoMay(@PathVariable String maThietBi){
-        List<QuanLyThongSoResponse> responseList = this.userService.getChiTietThongSoMay(maThietBi);
+    //?Cập nhật thông số máy
+    @PutMapping("/thiet-bi/cap-nhat")
+    public void putThongSoMay(@RequestBody List<ThongSoMayRequest> requestList){
+        this.userService.putThongSoMay(requestList);
+    }
+    //!xem chi tiết thông số (chưa làm được)
+    //------------------------------------------------ * ---------------------------------------------------------------
+
+    //---------------------------------------              Kich ban                ------------------------------------
+
+    //? Hien thi danh sach kich ban
+    @GetMapping("/kich-ban")
+    public List<KichBanResponse> getAllKichBan(){
+        List<KichBanResponse> responseList = this.userService.getDanhSachKichBan();
         return responseList;
     }
+    //? Tim kiem kich ban
+    @PostMapping("/kich-ban/tim-kiem")
+    public List<KichBanResponse> timKiemKichBan (@RequestBody KichBanRequest request){
+        List<KichBanResponse> responseList = this.userService.timKiemKichBan(request);
+        return responseList;
+    }
+    //? Them moi kich ban
+    @PostMapping("/kich-ban/them-moi-kich-ban")
+    public String postKichBan(@RequestBody KichBanRequest request){
+        String result = this.userService.postKichBan(request);
+        return result;
+    }
+    //?Them moi thong tin thong so kich ban
+    @PostMapping("/kich-ban/them-moi-thong-so-kich-ban")
+    public String postChiTietKichBan(@RequestBody List<ChiTietKichBanRequest> requestList){
+        String result = this.userService.postChiTietKichBan(requestList);
+        return result;
+    }
+    //?Xem danh sach thong so kich ban
+    @GetMapping("/kich-ban/chi-tiet-kich-ban/{maKichBan}")
+    public List<ChiTietKichBanResponse> getAllByMaKichBan(@PathVariable String maKichBan){
+        List<ChiTietKichBanResponse> responseList = this.userService.getAllByMaKichBan(maKichBan);
+        return responseList;
+    }
+    //? cap nhat thong so kich ban
+    @PutMapping("/kich-ban/cap-nhat-thong-so-kich-ban")
+    public String putChiTietKichBan(@RequestBody List<ChiTietKichBanRequest> requestList){
+        String result = this.userService.putChiTietKichBan(requestList);
+        return result;
+    }
+    //? xoa kich ban
+    @DeleteMapping("/kich-ban/del-kich-ban/{maKichBan}")
+    public void delKichBan (@PathVariable String maKichBan){
+        this.userService.delKichBan(maKichBan);
+    }
+    //? xoa thong so trong kich ban
+    @DeleteMapping("/kich-ban/del-thong-so-kich-ban/{idChiTietKichBan}")
+    public  void delByIdChiTietKichBan(@PathVariable Integer idChiTietKichBan){
+        this.userService.delByIdChiTietKichBan(idChiTietKichBan);
+    }
+    //!  xem chi tiet kich ban
+    //-------------------------------------------------- * -------------------------------------------------------------
 
+    //---------------------------                San xuat hang ngay              ---------------------------------------
+
+    // ? Hien thi danh sach san xuat hang ngay
+    @GetMapping("/san-xuat-hang-ngay")
+    public List<SanXuatHangNgayResponse> getAllSanXuatHangNgay (){
+        List<SanXuatHangNgayResponse> responseList = this.userService.getAllSanXuatHangNgay();
+        return responseList;
+    }
+    //? Tim kiem noi dung san xuat hang ngay (ok)
+    @PostMapping("/san-xuat-hang-ngay/tim-kiem")
+    public List<SanXuatHangNgayResponse> timKiemSanXuatHangNgay (@RequestBody SanXuatHangNgayRequest request){
+        List<SanXuatHangNgayResponse> responseList = this.userService.timKiemSanxuatHangNgay(request);
+        return responseList;
+    }
+    // ? them moi kich ban san xuat
+    @PostMapping("/san-xuat-hang-ngay/them-moi-kich-ban")
+    public String postSanXuatHangNgay(@RequestBody SanXuatHangNgayRequest request){
+        String result = this.userService.postSanXuatHangNgay(request);
+        return  result;
+    }
+    //?Xem danh sach thong so san xuat hang ngay
+    @GetMapping("/san-xuat-hang-ngay/chi-tiet-san-xuat/{maKichBan}")
+    public List<ChiTietSanXuatResponse> getAllsByMaKichBan(@PathVariable String maKichBan){
+        List<ChiTietSanXuatResponse> responseList = this.userService.getAllsByMaKichBan(maKichBan);
+        return responseList;
+    }
+    // ?Chinh sua noi dung san xuat hang ngay (1)
+    @PutMapping("/san-xuat-hang-ngay/cap-nhat")
+    public String putChiTietSanXuat(@RequestBody List<ChiTietSanXuatRequest> requestList){
+        String result = this.userService.putChiTietSanXuat(requestList);
+        return result;
+    }
+    // !(1)xoa thong so trong noi dung san xuat hang ngay
+    @DeleteMapping("/san-xuat-hang-ngay/del-thong-so/{idChiTietSanXuat}")
+    public void delByIdChiTietSanXuat(@PathVariable Integer idChiTietSanXuat){
+        this.userService.delByIdChiTietSanXuat(idChiTietSanXuat);
+    }
+    // ?(1)them moi thong so trong noi dung san xuat hang ngay
+    // !xem chi tiet noi dung 1 kich ban san xuat hang ngay
 }

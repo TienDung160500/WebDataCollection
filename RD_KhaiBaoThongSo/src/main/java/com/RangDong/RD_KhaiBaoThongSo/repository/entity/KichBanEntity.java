@@ -38,10 +38,10 @@ public class KichBanEntity {
     @Column(name = "time_update")
     private Date timeUpdate;
 
-    @Column(name = "create_by")
-    private String createBy;
+    @Column(name = "update_by")
+    private String updateBy;
 
-    @Column(name = "status")
+    @Column(name = "trang_thai")
     private String status;
 
 

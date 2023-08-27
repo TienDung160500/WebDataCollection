@@ -10,12 +10,15 @@ public class ChiTietSanXuatEntity {
     @Id
     @Column(name = "id_chi_tiet_san_xuat")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idChiTietKichBan;
+    private Integer idChiTietSanXuat;
+
+    @Column(name = "id_san_xuat_hang_ngay")
+    private Integer idSanXuatHangNgay;
 
     @Column(name = "ma_kich_ban")
     private String maKichBan;
 
-    @Column(name = "rows")
+    @Column(name = "hang_sxhn")
     private Integer rows;
 
     @Column(name = "thong_so")

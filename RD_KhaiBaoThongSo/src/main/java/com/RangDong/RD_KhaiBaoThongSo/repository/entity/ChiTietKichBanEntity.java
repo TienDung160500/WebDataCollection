@@ -12,10 +12,13 @@ public class ChiTietKichBanEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idChiTietKichBan;
 
+    @Column(name = "id_kich_ban")
+    private Integer idKichBan;
+
     @Column(name = "ma_kich_ban")
     private String maKichBan;
 
-    @Column(name = "rows")
+    @Column(name = "hang_mkb")
     private Integer rows;
 
     @Column(name = "thong_so")

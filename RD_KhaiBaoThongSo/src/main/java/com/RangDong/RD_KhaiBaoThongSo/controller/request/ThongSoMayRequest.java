@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class ThongSoMayRequest {
+    private Integer idThongSoThietBi;
     private Integer idThietBi;
     private Integer idThongSo;
     private String maThietBi;

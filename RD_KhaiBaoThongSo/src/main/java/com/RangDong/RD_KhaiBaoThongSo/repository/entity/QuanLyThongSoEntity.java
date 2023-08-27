@@ -1,5 +1,6 @@
 package com.RangDong.RD_KhaiBaoThongSo.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 
