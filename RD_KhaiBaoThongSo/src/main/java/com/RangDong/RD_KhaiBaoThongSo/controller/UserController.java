@@ -60,7 +60,14 @@ public class UserController {
         String result = this.userService.postThongSo(requests);
         return result;
     }
-    //☺ cập nhật thông số
+    //☺ xem chi tiet thong so
+    @GetMapping("/quan-ly-thong-so/chi-tiet-thong-so/{maThongSo}")
+    public List<QuanLyThongSoResponse> getChiTietThongSo(@PathVariable String maThongSo){
+        List<QuanLyThongSoResponse> responseList = this.userService.getChiTietThongSo(maThongSo);
+        return responseList;
+    }
+
+    //? cập nhật thông số
     @PutMapping("/quan-ly-thong-so/cap-nhat-thong-so/{maThongSo}")
     public String putThongSo(@PathVariable String maThongSo,
                              @RequestBody QuanLyThongSoRequest request) {
@@ -96,7 +103,7 @@ public class UserController {
         String result = this.userService.postThietBi(request);
         return result;
     }
-    //? del thông số thiết bị ->xoá luôn cả thông số thiết bị
+    //☺ del thông số thiết bị ->xoá luôn cả thông số thiết bị
     @DeleteMapping("/thiet-bi/del-thiet-bi/{maThietBi}")
     public void delThietBi(@PathVariable String maThietBi){
         this.userService.delThongSoMay(maThietBi);
@@ -124,18 +131,18 @@ public class UserController {
     public void putThongSoMay(@RequestBody List<ThongSoMayRequest> requestList){
         this.userService.putThongSoMay(requestList);
     }
-    //!xem chi tiết thông số (chưa làm được)
+    //!xem chi tiết thông số thiet bi
     //------------------------------------------------ * ---------------------------------------------------------------
 
     //---------------------------------------              Kich ban                ------------------------------------
 
-    //? Hien thi danh sach kich ban
+    //☺ Hien thi danh sach kich ban
     @GetMapping("/kich-ban")
     public List<KichBanResponse> getAllKichBan(){
         List<KichBanResponse> responseList = this.userService.getDanhSachKichBan();
         return responseList;
     }
-    //? Tim kiem kich ban
+    //☺ Tim kiem kich ban
     @PostMapping("/kich-ban/tim-kiem")
     public List<KichBanResponse> timKiemKichBan (@RequestBody KichBanRequest request){
         List<KichBanResponse> responseList = this.userService.timKiemKichBan(request);
@@ -165,7 +172,7 @@ public class UserController {
         String result = this.userService.putChiTietKichBan(requestList);
         return result;
     }
-    //? xoa kich ban
+    //☺ xoa kich ban
     @DeleteMapping("/kich-ban/del-kich-ban/{maKichBan}")
     public void delKichBan (@PathVariable String maKichBan){
         this.userService.delKichBan(maKichBan);
@@ -210,7 +217,7 @@ public class UserController {
         String result = this.userService.putChiTietSanXuat(requestList);
         return result;
     }
-    // !(1)xoa thong so trong noi dung san xuat hang ngay
+    // ?(1)xoa thong so trong noi dung san xuat hang ngay
     @DeleteMapping("/san-xuat-hang-ngay/del-thong-so/{idChiTietSanXuat}")
     public void delByIdChiTietSanXuat(@PathVariable Integer idChiTietSanXuat){
         this.userService.delByIdChiTietSanXuat(idChiTietSanXuat);

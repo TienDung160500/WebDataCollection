@@ -13,11 +13,9 @@ import java.util.List;
 public interface QuanLyThongSoRepository extends JpaRepository<QuanLyThongSoEntity, Integer>{
     //----------------------- Template Quản lý thông số ----------------
     //☺ Tìm kiếm theo mã thông số
-    @Query("SELECT a.maThongSo , a.tenThongSo  FROM QuanLyThongSoEntity" +
-            " a WHERE a.maThongSo like (%:m%)")
-    public List<QuanLyThongSoEntity> getByListMaThongSo(@Param("m")String maThongSo);
+    public List<QuanLyThongSoEntity> findAllByMaThongSo(String maThongSo);
     @Query("SELECT quan_ly_thong_so FROM QuanLyThongSoEntity" +
-            " quan_ly_thong_so WHERE quan_ly_thong_so.maThongSo like (%:m%)")
+            " quan_ly_thong_so WHERE quan_ly_thong_so.maThongSo = :m")
     public QuanLyThongSoEntity getByMaThongSo(@Param("m")String maThongSo);
     //☺ Sự kiện tìm kiếm
     @Query("select quan_ly_thong_so from QuanLyThongSoEntity " +

@@ -95,82 +95,65 @@
         </nz-modal>
       </nz-breadcrumb>
       <div class="inner-content">
-        <nz-table #fixedTable [nzData]="listOfData" [nzScroll]="{ x: '1150px', y: '850px' }">
+        <nz-table #fixedTable [nzData]="searchResults" [nzScroll]="{ x: '1150px', y: '850px' }">
           <thead>
             <tr>
               <th nzLeft>STT</th>
               <th nzLeft>
                 Mã kịch bản
-                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                  <input type="text" nz-input placeholder="search" />
-                </nz-input-group>
-                <ng-template #suffixIconButton>
-                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
-                </ng-template>
+                  <input type="text" nz-input placeholder="search"
+                  [(ngModel)]="maKichBan" [ngModelOptions]="{standalone:true}" />
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="timKiemKichBan()"></span></button>
               </th>
               <th>
-                Tên sản phẩm
-                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                  <input type="text" nz-input placeholder="search" />
-                </nz-input-group>
-                <ng-template #suffixIconButton>
-                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
-                </ng-template>
+                Mã sản phẩm
+                  <input type="text" nz-input placeholder="search" 
+                  [(ngModel)]="maSanPham" [ngModelOptions]="{standalone:true}"/>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="timKiemKichBan()"></span></button>
               </th>
               <th>
                 Creat at
-                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                  <input type="text" nz-input placeholder="search" />
-                </nz-input-group>
-                <ng-template #suffixIconButton>
-                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
-                </ng-template>
+                  <input type="text" nz-input placeholder="search" 
+                  [(ngModel)]="ngayTao" [ngModelOptions]="{standalone:true}"/>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="timKiemKichBan()"></span></button>
               </th>
               <th>
                 Thời gian cập nhật
-                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                  <input type="text" nz-input placeholder="search" />
-                </nz-input-group>
-                <ng-template #suffixIconButton>
-                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
-                </ng-template>
+                  <input type="text" nz-input placeholder="search" 
+                  [(ngModel)]="timeUpdate" [ngModelOptions]="{standalone:true}"/>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="timKiemKichBan()"></span></button>
               </th>
               <th>
                 Cập nhật bởi
-                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                  <input type="text" nz-input placeholder="search" />
-                </nz-input-group>
-                <ng-template #suffixIconButton>
-                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
-                </ng-template>
+                  <input type="text" nz-input placeholder="search" 
+                  [(ngModel)]="updateBy" [ngModelOptions]="{standalone:true}"/>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="timKiemKichBan()"></span></button>
               </th>
               <th>
                 Trạng thái
-                <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-                  <input type="text" nz-input placeholder="search" />
-                </nz-input-group>
-                <ng-template #suffixIconButton>
-                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search"></span></button>
-                </ng-template>
+                  <input type="text" nz-input placeholder="search" 
+                  [(ngModel)]="status" [ngModelOptions]="{standalone:true}"/>
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="timKiemKichBan()"></span></button>
               </th>
               <th nzRight>Options</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let data of fixedTable.data">
-              <td nzLeft>{{ data.STT }}</td>
-              <td nzLeft>{{ data.code_parameter }}</td>
-              <td>{{ data.name_parameter }}</td>
-              <td>{{ data.date }}</td>
-              <td>{{ data.date }}</td>
-              <td>{{ data.username }}</td>
-              <td>{{ data.name_parameter }}</td>
+            <tr *ngFor="let data of searchResults; let i = index">
+              <td nzLeft>{{ i+1 }}</td>
+              <td nzLeft>{{ data.maKichBan }}</td>
+              <td>{{ data.maSanPham }}</td>
+              <td>{{ data.ngayTao }}</td>
+              <td>{{ data.timeUpdate }}</td>
+              <td>{{ data.updateBy }}</td>
+              <td>{{ data.status }}</td>
               <td nzRight>
                 <button class="btn-parameter-edit">
                   <span nz-icon nzType="edit" nzTheme="outline" style="font-size: 30px;"></span>
                 </button>
                 <button class="btn-parameter-delete">
-                  <span nz-icon nzType="delete" nzTheme="outline" style="font-size: 30px;"></span>
+                  <span nz-icon nzType="delete" nzTheme="outline" style="font-size: 30px;"
+                  (click)="delKichBan(data.maKichBan)"></span>
                 </button>
               </td>
             </tr>

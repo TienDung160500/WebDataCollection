@@ -67,6 +67,7 @@ public class UserService {
         response.setIdThongSo(entity.getIdThongSo());
         response.setMaThongSo(entity.getMaThongSo());
         response.setTenThongSo(entity.getTenThongSo());
+        response.setMoTa(entity.getMoTa());
         response.setNgayTao(entity.getNgayTao());
         response.setTimeUpdate(entity.getTimeUpdate());
         response.setUpdateBy(entity.getUpdateBy());
@@ -87,7 +88,7 @@ public class UserService {
 
     //☺ Xoá 1 thông số theo mã thông số
     public void delByThongSo(String maThongSo) {
-        List<QuanLyThongSoEntity> entity = this.quanLyThongSoRepository.getByListMaThongSo(maThongSo);
+        List<QuanLyThongSoEntity> entity = this.quanLyThongSoRepository.findAllByMaThongSo(maThongSo);
         log.info("entity: " + entity);
         if (entity.isEmpty()) {
             log.info("Không tìm thấy thông số");
@@ -97,7 +98,7 @@ public class UserService {
         }
     }
 
-    //☺ them moi thong so
+    //? them moi thong so
     public String postThongSo(List<QuanLyThongSoRequest> requests) {
         for (QuanLyThongSoRequest request : requests) {
             QuanLyThongSoEntity entity = new QuanLyThongSoEntity();
@@ -113,8 +114,17 @@ public class UserService {
         log.info("Them moi thanh cong");
         return "Thêm mới thành công";
     }
-
-    //☺ cap nhat thong so
+    //☺ xem chi tiet thong so
+    public List<QuanLyThongSoResponse> getChiTietThongSo(String maThongSo){
+        List<QuanLyThongSoEntity> entities = this.quanLyThongSoRepository.findAllByMaThongSo(maThongSo);
+        List<QuanLyThongSoResponse> responseList = new ArrayList<>();
+        for (QuanLyThongSoEntity entity : entities){
+            QuanLyThongSoResponse response = getQuanLyThongSoResponse(entity);
+            responseList.add(response);
+        }
+        return responseList;
+    }
+    //? cap nhat thong so
     public String putThongSo(QuanLyThongSoRequest request, String maThongSo) {
         QuanLyThongSoEntity entity = this.quanLyThongSoRepository.getByMaThongSo(maThongSo);
         entity.setMaThongSo(request.getMaThongSo());
@@ -171,7 +181,7 @@ public class UserService {
 
     // Note ( Function test )
     public List<QuanLyThongSoResponse> getByMaThongSo(String maThongSo) {
-        List<QuanLyThongSoEntity> entities = this.quanLyThongSoRepository.getByListMaThongSo(maThongSo);
+        List<QuanLyThongSoEntity> entities = this.quanLyThongSoRepository.findAllByMaThongSo(maThongSo);
         List<QuanLyThongSoResponse> responseList = new ArrayList<>();
         for (QuanLyThongSoEntity entity : entities) {
             QuanLyThongSoResponse response = new QuanLyThongSoResponse();
@@ -195,7 +205,7 @@ public class UserService {
         }
         return responseList;
     }
-    //? del thiết bị -> xoá luôn cả thông số thiết bị
+    //☺ del thiết bị -> xoá luôn cả thông số thiết bị
     public void delThongSoMay(String maThietBi){
         List<ThietBiEntity> entities = this.thietBiRepository.getByListMaThietBi(maThietBi);
         if(entities.isEmpty()){
@@ -285,7 +295,7 @@ public class UserService {
             this.thongSoMayRepository.save(entity);
         }
     }
-    //! xem chi tiết thông số
+    //! xem chi tiết thông số thiet bi
     //------------------------------------------------ * ---------------------------------------------------------------
 
     //---------------------------------------              Kịch bản                ------------------------------------
@@ -307,7 +317,7 @@ public class UserService {
         return response;
     }
 
-    //? Hien thi danh sach kich ban
+    //☺ Hien thi danh sach kich ban
     public List<KichBanResponse> getDanhSachKichBan() {
         List<KichBanEntity> entities = this.kichBanRepository.findAll();
         List<KichBanResponse> responseList = new ArrayList<>();
@@ -318,7 +328,7 @@ public class UserService {
         return responseList;
     }
 
-    //? Tim kiem kich ban
+    //☺ Tim kiem kich ban
     public List<KichBanResponse> timKiemKichBan(KichBanRequest request) {
         List<KichBanEntity> entities = this.kichBanRepository.timKiemKichBan(request.getMaKichBan(), request.getMaThietBi(),
                 request.getLoaiThietBi(), request.getDayChuyen(), request.getMaSanPham(), request.getVersionSanPham(),
@@ -400,7 +410,7 @@ public String postChiTietKichBan(List<ChiTietKichBanRequest> requests){
         }
         return "Cap nhat thong so kich ban thanh cong";
     }
-    // ? xoa kich ban
+    // ☺ xoa kich ban
     public void delKichBan(String maKichBan){
         List<KichBanEntity> entities = this.kichBanRepository.findAllByMaKichBan(maKichBan);
         if (entities.isEmpty()){

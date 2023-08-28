@@ -1,7 +1,8 @@
 import { NzButtonSize } from 'ng-zorro-antd/button';
-import { DataService } from './../data.service';
+import { DataService, thietBi } from './../data.service';
 import { ItemData } from './../item-data';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-machine-parameter',
@@ -9,40 +10,74 @@ import { Component } from '@angular/core';
   styleUrls: ['./machine-parameter.component.css']
 })
 export class MachineParameterComponent {
+@Input() maThietBi ='';
+@Input() loaiThietBi ='';
+@Input() dayChuyen ='';
+@Input() status ='';
+@Input() ngayTao =null;
+@Input() timeUpdate =null;
 
   searchTerm: string = '';
 
-  listOfData: ItemData[] = [];
-  searchResults: ItemData[] = [];
+  searchResults: thietBi[] = [];
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService,private http:HttpClient) { }
 
-  // search() {
-  //   this.searchResults = this.dataService.search(this.searchTerm);
-  // }
 
   ngOnInit(): void {
-    for (let i = 1; i <= 100; i++) {
-      this.listOfData.push({
-        STT: `${i}`,
-        code_parameter: 32,
-        name_parameter: `London`,
-        date: Date(),
-        username: `Dũng`,
-      });
+    if(sessionStorage.getItem('danhSachThietBi')===null){
+      this.getDanhSachThietBi();
+    }else{
+      var result = sessionStorage.getItem('danhSachThietBi');
+      if (result) {
+        console.log('lấy danh sách từ cache ')
+        this.searchResults = JSON.parse(result);
+      }
     }
-
-    for (let i = 101; i <= 150; i++) {
-      this.listOfData.push({
-        STT: `${i}`,
-        code_parameter: 322,
-        name_parameter: `VN`,
-        date: Date(),
-        username: `Dũng`,
-      });
+    }
+//--------------------lay danh sach thiet bi -------------------
+getDanhSachThietBi(){
+  this.http.get<any>('http://localhost:8080/thiet-bi').subscribe(res =>{
+    console.log('lấy danh sách từ DB');
+      this.searchResults = res as thietBi[];
+      console.log(this.searchResults);
+      sessionStorage.setItem('danhSachThietBi', JSON.stringify(res));
+  })
+}
+//---------------------------- Tim kiem ---------------------------------(ok)
+timKiemThietBi(){
+  this.searchResults = [];
+    var timKiem = {maThietBi:this.maThietBi,loaiThietBi:this.loaiThietBi,dayChuyen:this.dayChuyen,ngayTao:this.ngayTao,timeUpdate:this.timeUpdate,updateBy:"",status:this.status}
+      if(sessionStorage.getItem('thiet bi: '+JSON.stringify(timKiem))=== null){
+      this.http.post<any>('http://localhost:8080/thiet-bi/tim-kiem',timKiem).subscribe(res => {
+        console.log("tim kiem: ", res)
+        this.searchResults = res as any;
+        sessionStorage.setItem(JSON.stringify(timKiem),JSON.stringify(res));
+      })
+    }else{
+      var result = sessionStorage.getItem(JSON.stringify(timKiem));
+      if (result) {
+        console.log('lay tu cache')
+        console.log("ma thong so: ", timKiem)
+        this.searchResults = JSON.parse(result);
     }
   }
-
+}
+//---------------------------- del thiet bi ---------------------------
+delThietBi(del:string){
+  var result = confirm("Xác nhận xoá thiet bi !");
+  console.log("ma thiet bi: ",del)
+  if (result) {
+    this.http.delete('http://localhost:8080/thiet-bi/del-thiet-bi/' + del).subscribe(() => {
+      alert('Xoá thành công');
+      //------------ xoá thông tin thiet bi khỏi cache -----------------
+      sessionStorage.removeItem(this.maThietBi);
+      //-------------- cập nhật danh sách thông số trong cache -----------
+      this.getDanhSachThietBi();
+    })
+  }
+}
+//-------------------------------------- Them moi -----------------
   isVisibleTop = false;
   isVisibleMiddle = false;
 
@@ -107,7 +142,9 @@ export class MachineParameterComponent {
       description: 'My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.'
     }
   ];
+
 }
+
 export interface ItemData1 {
   STT: number,
   code_parameter: number,

@@ -67,7 +67,6 @@ export class WelcomeContentComponent {
     updateBy:"",
     status:""
   }
-  //------------------------- Dữ liệu giả -------------------------
   constructor(private dataService: DataService, private http: HttpClient) { }
   ngOnInit(): void {
     sessionStorage.removeItem('danhSachTatCaThongSo');
@@ -104,7 +103,7 @@ export class WelcomeContentComponent {
       })
     }
   }
-  //---------------------- them moi thong so ---------------------- (chưa test trên nút tìm kiếm)
+  //---------------------- them moi thong so ---------------------- (chưa test )
   postThongSo(){
     this.searchResults = [];
     this.http.post('http://localhost:8080/quan-ly-thong-so/them-moi-thong-so',this.body).subscribe(res =>{
@@ -124,7 +123,7 @@ export class WelcomeContentComponent {
    //------------------------ su kien tim kiem ------------------------------
    timKiemThongSo(){
     this.searchResults = [];
-    var timKiem = {maThongSo:this.maThongSo,tenThongSo:this.tenThongSo,ngayTao:this.ngayTao,timeUpdate:this.timeUpdate,updateBy:this.updateBy,status:this.status}
+    var timKiem = {maThongSo:this.maThongSo,tenThongSo:this.tenThongSo,moTa:"",ngayTao:this.ngayTao,timeUpdate:this.timeUpdate,updateBy:this.updateBy,status:this.status}
       if(sessionStorage.getItem(JSON.stringify(timKiem))=== null){
       this.http.post<any>('http://localhost:8080/quan-ly-thong-so/tim-kiem',timKiem).subscribe(res => {
         console.log("tim kiem: ", res)
@@ -140,6 +139,26 @@ export class WelcomeContentComponent {
     }
   }
 }
+//---------------------------- xem chi tiet thong so -------------------------------------
+getChiTietThongSo(value: string){
+  this.searchResults = [];
+  if(sessionStorage.getItem("ma thong so: "+value)=== null){
+    console.log("ma thong so: ", value);
+    this.http.get<any>('http://localhost:8080/quan-ly-thong-so/chi-tiet-thong-so/'+ value).subscribe(res =>{
+      console.log("message: ",res);
+      this.searchResults = res as ItemData[];
+      sessionStorage.setItem("ma thong so:"+value,res);
+    })
+  }else{
+    var result = sessionStorage.getItem("ma thong so: "+value);
+    if (result) {
+      console.log('lay tu cache');
+      console.log("ma thong so: ", value);
+      this.searchResults = JSON.parse(result);
+  }
+}
+}
+//--------------------------------thêm mới thông số ---------------------------------
 expandSet = new Set<number>();
   onExpandChange(id: number, checked: boolean): void {
     if (checked) {
@@ -148,43 +167,22 @@ expandSet = new Set<number>();
       this.expandSet.delete(id);
     }
   }
-listOfData1 = [
-  {
-    id: 1,
-    name: 'John Brown',
-    age: 32,
-    expand: false,
-    address: 'New York No. 1 Lake Park',
-    description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.'
-  },
-  {
-    id: 2,
-    name: 'Jim Green',
-    age: 42,
-    expand: false,
-    address: 'London No. 1 Lake Park',
-    description: 'My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park.'
-  },
-  {
-    id: 3,
-    name: 'Joe Black',
-    age: 32,
-    expand: false,
-    address: 'Sidney No. 1 Lake Park',
-    description: 'My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.'
-  }
-];
 
   size: NzButtonSize = 'large';
 
   isVisibleTop = false;
   isVisibleMiddle = false;
+  isVisibleMiddle1 = false;
   showModalTop(): void {
     this.isVisibleTop = true;
   }
 
   showModalMiddle(): void {
     this.isVisibleMiddle = true;
+  }
+  showModalMiddle1(maThongSo: string): void {
+    this.getChiTietThongSo(maThongSo);
+    this.isVisibleMiddle1 = true;
   }
 
   handleOkTop(): void {
@@ -202,5 +200,34 @@ listOfData1 = [
 
   handleCancelMiddle(): void {
     this.isVisibleMiddle = false;
+  }
+  handleOkMiddle1(): void {
+    console.log('click ok');
+    this.isVisibleMiddle1 = false;
+  }
+
+  handleCancelMiddle1(): void {
+    this.isVisibleMiddle1 = false;
+  }
+  // tao du lieu gia 
+  listOfData = [
+    {
+      tenThongSo:"",
+      maThongSo:"",
+      moTa:"",
+      status:""
+    }
+  ];
+  data = {
+    tenThongSo:"",
+    maThongSo:"",
+    moTa:"",
+    status:""
+  }
+  insertListOfData(){
+    this.listOfData.push(this.data);
+  }
+  removeItemListOfData(){
+    this.listOfData.pop();
   }
 }

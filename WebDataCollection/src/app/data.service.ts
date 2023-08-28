@@ -29,9 +29,10 @@ export class DataService {
   constructor() { }
 }
 export interface ItemData {
-  idThongSo: Int16Array
+  idThongSo: number
   maThongSo: string
   tenThongSo: string
+  moTa:string
   ngayTao: Date
   timeUpdate: Date
   updateBy: string
@@ -45,4 +46,25 @@ export interface ItemDataRequest{
   timeUpdate: number
   updateBy: string
   status: string
+}
+export interface thietBi{
+  maThietBi:string,
+  loaiThietBi:string,
+  dayChuyen:string,
+  ngayTao:Date,
+  timeUpdate:Date,
+  updateBy:string,
+  status:string
+}
+export interface kichBan{
+  maKichBan:string,
+  maThietBi:string,
+  loaiThietBi:string,
+  dayChuyen:string,
+  maSanPham:string
+  versionSanPham:string,
+  ngayTao:Date,
+  timeUpdate:Date,
+  updateBy:string,
+  status:string
 }

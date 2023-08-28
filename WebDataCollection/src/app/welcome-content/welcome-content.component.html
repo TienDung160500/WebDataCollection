@@ -42,39 +42,68 @@
       <nz-breadcrumb>
         <nz-breadcrumb-item>Quản lý thông số</nz-breadcrumb-item>
         <nz-breadcrumb-item>Thông số máy</nz-breadcrumb-item>
-        <button nz-button [nzSize]="size" nzType="primary" style="margin-left: 1180px;">Thêm mới
-          <span nz-icon nzType="plus" nzTheme="outline"></span>
-        </button>
-        <!--------------------------------------------------- popup khai báo thông số máy -------------------------------------------------------------------->
-        <nz-modal [(nzVisible)]="isVisibleMiddle" nzTitle="Khai báo thông số máy" nzCentered
-          (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()">
+        <!--------------------------------------------------- template Chi tiết thông số  -------------------------------------------------------------------->
+        <nz-modal [(nzVisible)]="isVisibleMiddle1" nzTitle="Chi tiết thông số " nzCentered
+          (nzOnCancel)="handleCancelMiddle1()" (nzOnOk)="handleOkMiddle1()">
           <ng-container *nzModalContent>
             <form action="">
-              <input nz-input placeholder="Mã máy" nzSize="default" style="width: 40%" />
-              <input nz-input placeholder="Loại máy" nzSize="default"
-                style="width: 40%; right: 20px; position: absolute;" />
             </form>
-            <nz-table #nzTable [nzData]="listOfData1" nzTableLayout="fixed">
+            <nz-table #nzTable [nzData]="searchResults" nzTableLayout="fixed">
               <thead>
                 <tr>
                   <th nzWidth="60px"></th>
                   <th>Thông số</th>
                   <th>Mã thông số</th>
-                  <th>Trạng thái</th>
+                  <th>Mô tả</th>
+                  <th>Trạng thái</th>
                   <th>Tùy chọn</th>
                 </tr>
               </thead>
               <tbody>
-                <ng-container *ngFor="let data of nzTable.data">
+                <ng-container *ngFor="let data of searchResults">
                   <tr>
-                    <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
-                    <td>{{ data.name }}</td>
-                    <td>{{ data.age }}</td>
-                    <td>{{ data.address }}</td>
-                    <td>{{ data.name }}</td>
+                    <td [nzExpand]="expandSet.has(data.idThongSo)" (nzExpandChange)="onExpandChange(data.idThongSo, $event)"></td>
+                    <td><input type="text" nz-input placeholder="search" [(ngModel)]="data.tenThongSo"[ngModelOptions]="{standalone:true}" /></td>
+                    <td><input type="text" nz-input placeholder="search" [(ngModel)]="data.maThongSo"[ngModelOptions]="{standalone:true}" /></td>
+                    <td><input type="text" nz-input placeholder="search" [(ngModel)]="data.moTa"[ngModelOptions]="{standalone:true}" /></td>
+                    <td><input type="text" nz-input placeholder="search" [(ngModel)]="data.status"[ngModelOptions]="{standalone:true}" /></td>
                   </tr>
-                  <tr [nzExpand]="expandSet.has(data.id)">
-                    <span>{{ data.description }}</span>
+                </ng-container>
+              </tbody>
+            </nz-table>
+          </ng-container>
+        </nz-modal>
+        <!------------------------------------------------------ popup thêm mới thông số  -------------------------------------------------------->
+        <button nz-button nzType="primary" (click)="showModalMiddle()" style="position: absolute; right: 200px;">Thêm mới
+          <span nz-icon nzType="plus" nzTheme="outline"></span>
+        </button>
+        <nz-modal [(nzVisible)]="isVisibleMiddle" nzTitle="Thêm mới thông số" nzCentered
+          (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()" class="custom-modal">
+          <ng-container *nzModalContent>
+            <form action="">
+              <input nz-input placeholder="Mã máy" nzSize="default" style="width: 40%" />
+              <input nz-input placeholder="Loại máy" nzSize="default"
+                style="width: 40%; right: 20px; position: absolute;" />
+                <button type="plus" (click)="insertListOfData()">Them moi</button>
+            </form>
+            <nz-table #nzTable [nzData]="listOfData" nzTableLayout="fixed" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th nzWidth="60px">STT</th>
+                  <th>Thông số</th>
+                  <th>Mã Thông Số</th>
+                  <th>Mô tả</th>
+                  <th>Tùy chọn</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let data of listOfData; let i = index">
+                  <tr>
+                    <td>{{i+1}}</td>
+                    <td><input type="text" nz-input placeholder="search" [(ngModel)]="data.tenThongSo"[ngModelOptions]="{standalone:true}" /></td>
+                    <td><input type="text" nz-input placeholder="search" [(ngModel)]="data.maThongSo"[ngModelOptions]="{standalone:true}" /></td>
+                    <td><input type="text" nz-input placeholder="search" [(ngModel)]="data.tenThongSo"[ngModelOptions]="{standalone:true}" /></td>
+                    <td><button (click)="removeItemListOfData()">Xoá</button></td>
                   </tr>
                 </ng-container>
               </tbody>
@@ -152,8 +181,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let data of searchResults">
-              <td nzLeft>{{ data.idThongSo }}</td> <!--STT-->
+            <tr *ngFor="let data of searchResults; let i = index">
+              <td nzLeft>{{ i+1 }}</td> <!--STT-->
               <td nzLeft>{{ data.maThongSo }}</td><!--code_parameter-->
               <td>{{ data.tenThongSo }}</td><!--name_parameter-->
               <td>{{ data.ngayTao }}</td><!--date-->
@@ -161,8 +190,9 @@
               <td>{{ data.updateBy }}</td><!--username-->
               <td>{{ data.status }}</td><!--name_parameter-->
               <td nzRight>
+                <!-- //------------------------- xem chi tiet thong so ---------------------------------- -->
                 <button class="btn-parameter-edit">
-                  <span nz-icon nzType="tool" nzTheme="outline" style="font-size: 30px;"></span>
+                  <span nz-icon nzType="tool" nzTheme="outline" style="font-size: 30px;" (click)="showModalMiddle1(data.maThongSo)"></span>
                 </button>
                 <button class="btn-parameter-delete">
                   <span nz-icon nzType="delete" nzTheme="outline" style="font-size: 30px;"

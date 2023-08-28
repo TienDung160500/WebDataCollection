@@ -22,7 +22,7 @@ public class WebConfig {
         //cho  phép backend nhận header chứa thông tin xác thực
         config.setAllowCredentials(true);
         //chứa url của front-end
-        config.addAllowedOrigin("http://localhost:4200");
+        config.addAllowedOrigin("http://192.168.18.195:4200");
         //các phần header đặc trưng mà ưn dụng phải chấp nhận
         config.setAllowedHeaders(Arrays.asList(
                 HttpHeaders.AUTHORIZATION,

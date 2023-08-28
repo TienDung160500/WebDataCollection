@@ -1,7 +1,8 @@
-import { DataService } from './../data.service';
+import { DataService, kichBan } from './../data.service';
 import { ItemData } from './../item-data';
 import { NzButtonSize } from 'ng-zorro-antd/button';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-script-manager',
@@ -10,38 +11,72 @@ import { Component } from '@angular/core';
 })
 export class ScriptManagerComponent {
 searchTerm: string = '';
-
+@Input() maKichBan = '';
+@Input() maThietBi = '';
+@Input() loaiThietBi = '';
+@Input() dayChuyen = '';
+@Input() maSanPham = '';
+@Input() versionSanPham = '';
+@Input() ngayTao = null;
+@Input() timeUpdate = null;
+@Input() updateBy = '';
+@Input() status = '';
   listOfData: ItemData[] = [];
-  searchResults: ItemData[] = [];
+  searchResults: kichBan[] = [];
 
-  constructor(private dataService: DataService) { }
-
-  // search() {
-  //   this.searchResults = this.dataService.search(this.searchTerm);
-  // }
+  constructor(private dataService: DataService, private http:HttpClient) { }
 
   ngOnInit(): void {
-    for (let i = 1; i <= 100; i++) {
-      this.listOfData.push({
-        STT: `${i}`,
-        code_parameter: 32,
-        name_parameter: `London`,
-        date: Date(),
-        username: `Dũng`,
-      });
-    }
-
-    for (let i = 101; i <= 150; i++) {
-      this.listOfData.push({
-        STT: `${i}`,
-        code_parameter: 322,
-        name_parameter: `VN`,
-        date: Date(),
-        username: `Dũng`,
-      });
+    if(sessionStorage.getItem('danhSachKichBan')===null){
+      this.getDanhSachKichBan();
+    }else{
+      var result = sessionStorage.getItem('danhSachKichBan');
+      if (result) {
+        console.log('lấy danh sách từ cache ')
+        this.searchResults = JSON.parse(result);
+      }
     }
   }
-
+  getDanhSachKichBan(){
+    this.http.get<any>('http://localhost:8080/kich-ban').subscribe(res =>{
+      console.log('lấy danh sách từ DB');
+        this.searchResults = res as kichBan[];
+        console.log(this.searchResults);
+        sessionStorage.setItem('danhSachKichBan', JSON.stringify(res));
+    })
+  }
+  //--------------------------------- Tim kiem --------------------------------
+  timKiemKichBan(){
+    this.searchResults = [];
+      var timKiem = {maKichBan:this.maKichBan,maThietBi:"",loaiThietBi:"",dayChuyen:"",maSanPham:this.maSanPham,versionSanPham:"",ngayTao:this.ngayTao,timeUpdate:this.timeUpdate,updateBy:this.updateBy,status:this.status}
+        if(sessionStorage.getItem('kich ban: '+JSON.stringify(timKiem))=== null){
+        this.http.post<any>('http://localhost:8080/kich-ban/tim-kiem',timKiem).subscribe(res => {
+          console.log("tim kiem kich ban: ", res)
+          this.searchResults = res as any;
+          sessionStorage.setItem(JSON.stringify(timKiem),JSON.stringify(res));
+        })
+      }else{
+        var result = sessionStorage.getItem('kich ban: '+JSON.stringify(timKiem));
+        if (result) {
+          console.log('lay tu cache')
+          console.log("kich ban: ", timKiem)
+          this.searchResults = JSON.parse(result);
+      }
+    }
+  }
+  //-------------------------------- del kich ban --------------------------------------
+  delKichBan(del:string){
+    var result = confirm("Xác nhận xoá thiet bi !");
+    console.log("ma kich ban: ",del)
+    if (result) {
+      this.http.delete('http://localhost:8080/kich-ban/del-kich-ban/' + del).subscribe(() => {
+        alert('Xoá thành công');
+        //------------ xoá thông tin thiet bi khỏi cache -----------------
+        //-------------- cập nhật danh sách thông số trong cache -----------
+        this.getDanhSachKichBan();
+      })
+    }
+  }
   isVisibleTop = false;
   isVisibleMiddle = false;
 
