@@ -300,7 +300,7 @@ public class UserService {
 
     //---------------------------------------              Kịch bản                ------------------------------------
 
-    //☺ Hàm set giá trị cho từng thuộc tính -
+    //☺ Hàm set giá trị cho từng thuộc tính
     private static KichBanResponse getKichBanResponse(KichBanEntity entity) {
         KichBanResponse response = new KichBanResponse();
         response.setIdKichBan(entity.getIdKichBan());

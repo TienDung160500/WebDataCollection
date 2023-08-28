@@ -39,5 +39,7 @@ public class ThongSoMayEntity {
     @Column(name = "phan_loai")
     private String phanLoai;
 
-
+    @ManyToOne
+    @JoinColumn(name = "id_thong_so")
+    private ThietBiEntity thietBiEntity;
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Reference;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -36,4 +37,7 @@ public class ThietBiEntity {
 
     @Column(name = "status")
     private String status;
+
+    @OneToMany(mappedBy = "thietBiEntity")
+    private List<ThongSoMayEntity> thongSoMayEntities;
 }
