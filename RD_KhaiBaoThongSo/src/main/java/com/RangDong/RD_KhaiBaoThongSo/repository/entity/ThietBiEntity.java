@@ -1,5 +1,6 @@
 package com.RangDong.RD_KhaiBaoThongSo.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.Data;
@@ -9,7 +10,6 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Data
 @Table(name = "thiet_bi")
 public class ThietBiEntity {
     @Id
@@ -38,6 +38,79 @@ public class ThietBiEntity {
     @Column(name = "status")
     private String status;
 
-    @OneToMany(mappedBy = "thietBiEntity")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "thietBi")
+    @JsonManagedReference
     private List<ThongSoMayEntity> thongSoMayEntities;
+
+    public Integer getIdThietBi() {
+        return idThietBi;
+    }
+
+    public void setIdThietBi(Integer idThietBi) {
+        this.idThietBi = idThietBi;
+    }
+
+    public String getMaThietBi() {
+        return maThietBi;
+    }
+
+    public void setMaThietBi(String maThietBi) {
+        this.maThietBi = maThietBi;
+    }
+
+    public String getLoaiThietBi() {
+        return loaiThietBi;
+    }
+
+    public void setLoaiThietBi(String loaiThietBi) {
+        this.loaiThietBi = loaiThietBi;
+    }
+
+    public String getDayChuyen() {
+        return dayChuyen;
+    }
+
+    public void setDayChuyen(String dayChuyen) {
+        this.dayChuyen = dayChuyen;
+    }
+
+    public Date getNgayTao() {
+        return ngayTao;
+    }
+
+    public void setNgayTao(Date ngayTao) {
+        this.ngayTao = ngayTao;
+    }
+
+    public Date getTimeUpdate() {
+        return timeUpdate;
+    }
+
+    public void setTimeUpdate(Date timeUpdate) {
+        this.timeUpdate = timeUpdate;
+    }
+
+    public String getUpdateBy() {
+        return updateBy;
+    }
+
+    public void setUpdateBy(String updateBy) {
+        this.updateBy = updateBy;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public List<ThongSoMayEntity> getThongSoMayEntities() {
+        return thongSoMayEntities;
+    }
+
+    public void setThongSoMayEntities(List<ThongSoMayEntity> thongSoMayEntities) {
+        this.thongSoMayEntities = thongSoMayEntities;
+    }
 }

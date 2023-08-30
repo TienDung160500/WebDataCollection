@@ -1,9 +1,11 @@
 package com.RangDong.RD_KhaiBaoThongSo.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -44,5 +46,7 @@ public class KichBanEntity {
     @Column(name = "trang_thai")
     private String status;
 
-
+    @OneToMany(mappedBy = "kichBan")
+    @JsonManagedReference
+    private List<ChiTietKichBanEntity> chiTietKichBan;
 }

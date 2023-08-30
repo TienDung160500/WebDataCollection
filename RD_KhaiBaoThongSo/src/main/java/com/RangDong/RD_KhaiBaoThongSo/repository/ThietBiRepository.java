@@ -33,4 +33,7 @@ public interface ThietBiRepository extends JpaRepository<ThietBiEntity,Integer> 
                                               @Param("e") Date timeUpdate,
                                               @Param("f") String updateBy,
                                               @Param("g") String status);
+    @Query("SELECT DISTINCT o FROM ThietBiEntity o " +
+            " WHERE o.idThietBi =:c")
+    public ThietBiEntity getAllByIdThietBi(@Param("c") Integer maThietBi);
 }

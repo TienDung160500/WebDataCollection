@@ -34,4 +34,5 @@ public interface SanXuatHangNgayRepository  extends JpaRepository<SanXuatHangNga
                                                               @Param("h")Date ngayTao,
                                                               @Param("i")Date timeUpdate,
                                                               @Param("k")String status);
+    public SanXuatHangNgayEntity findAllByMaKichBan(String maKichBan);
 }

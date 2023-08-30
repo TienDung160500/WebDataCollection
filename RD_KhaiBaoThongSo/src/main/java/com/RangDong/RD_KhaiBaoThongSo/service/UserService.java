@@ -5,6 +5,7 @@ import com.RangDong.RD_KhaiBaoThongSo.controller.response.*;
 import com.RangDong.RD_KhaiBaoThongSo.repository.*;
 import com.RangDong.RD_KhaiBaoThongSo.repository.entity.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class UserService {
     private ThietBiRepository thietBiRepository;
     @Autowired
     private ThongSoMayRepository thongSoMayRepository;
+    @Getter
     @Autowired
     private KichBanRepository kichBanRepository;
     @Autowired
@@ -180,16 +182,12 @@ public class UserService {
     }
 
     // Note ( Function test )
-    public List<QuanLyThongSoResponse> getByMaThongSo(String maThongSo) {
-        List<QuanLyThongSoEntity> entities = this.quanLyThongSoRepository.findAllByMaThongSo(maThongSo);
-        List<QuanLyThongSoResponse> responseList = new ArrayList<>();
-        for (QuanLyThongSoEntity entity : entities) {
-            QuanLyThongSoResponse response = new QuanLyThongSoResponse();
-            response.setMaThongSo(entity.getMaThongSo());
-            response.setTenThongSo(entity.getTenThongSo());
-            responseList.add(response);
-        }
-        return responseList;
+    public  ThietBiResponse getByMaThietBi (Integer idThietBi){
+        ThietBiEntity entity = this.thietBiRepository.getAllByIdThietBi(idThietBi);
+        ThietBiResponse response = getThietBiResponse(entity);
+        response.setThongSoMayResponseList(entity.getThongSoMayEntities());
+        log.info("entity: "+ entity.getThongSoMayEntities());
+        return response;
     }
 
     //☺ Tìm kiếm
@@ -241,8 +239,6 @@ public class UserService {
         Integer row = 0;
         for (ThongSoMayRequest request : requestList) {
             ThongSoMayEntity entity = new ThongSoMayEntity();
-            entity.setIdThietBi(request.getIdThietBi());
-            entity.setIdThongSo(request.getIdThongSo());
             entity.setMaThietBi(request.getMaThietBi());
             entity.setLoaiThietBi(request.getLoaiThietBi());
             entity.setRows(row + 1);
@@ -285,17 +281,33 @@ public class UserService {
     //? cập nhật thông số máy trong khi xem danh sách thông số máy
     public void putThongSoMay(List<ThongSoMayRequest> requestList){
         // tìm kiếm thông tin thông số theo id_thong_so_thiet_bi
-        for (ThongSoMayRequest request: requestList){
+        for (ThongSoMayRequest request: requestList) {
             ThongSoMayEntity entity = this.thongSoMayRepository.findAllByIdThongSoThietBi(request.getIdThongSoThietBi());
-            entity.setIdThongSo(request.getIdThongSo());
-            entity.setThongSo(request.getThongSo());
-            entity.setMoTa(request.getMoTa());
-            entity.setPhanLoai(request.getPhanLoai());
-            entity.setStatus(request.getStatus());
-            this.thongSoMayRepository.save(entity);
+            //cập nhật thông số đã có
+            if (entity != null) {
+                entity.setThongSo(request.getThongSo());
+                entity.setMoTa(request.getMoTa());
+                entity.setPhanLoai(request.getPhanLoai());
+                entity.setStatus(request.getStatus());
+                this.thongSoMayRepository.save(entity);
+            }else { // Thêm mới thông số chưa có
+                ThongSoMayEntity entity1 = new ThongSoMayEntity();
+                entity1.setThongSo(request.getThongSo());
+                entity1.setMoTa(request.getMoTa());
+                entity1.setPhanLoai(request.getPhanLoai());
+                entity1.setStatus(request.getStatus());
+                this.thongSoMayRepository.save(entity1);
+            }
         }
     }
-    //! xem chi tiết thông số thiet bi
+    //? xem chi tiết thông số thiet bi
+    public  ThietBiResponse getAllByIdThietBi (Integer idThietBi){
+        ThietBiEntity entity = this.thietBiRepository.getAllByIdThietBi(idThietBi);
+        ThietBiResponse response = getThietBiResponse(entity);
+        response.setThongSoMayResponseList(entity.getThongSoMayEntities());
+        log.info("entity: "+ entity.getThongSoMayEntities());
+        return response;
+    }
     //------------------------------------------------ * ---------------------------------------------------------------
 
     //---------------------------------------              Kịch bản                ------------------------------------
@@ -364,7 +376,6 @@ public class UserService {
 public String postChiTietKichBan(List<ChiTietKichBanRequest> requests){
         for (ChiTietKichBanRequest request:requests){
             ChiTietKichBanEntity entity = new ChiTietKichBanEntity();
-            entity.setIdKichBan(request.getIdKichBan());
             entity.setMaKichBan(request.getMaKichBan());
             entity.setRows(request.getRows());
             entity.setThongSo(request.getThongSo());
@@ -384,7 +395,6 @@ public String postChiTietKichBan(List<ChiTietKichBanRequest> requests){
         log.info("xem danh sach kich ban");
         for (ChiTietKichBanEntity entity:entities){
             ChiTietKichBanResponse response = new ChiTietKichBanResponse();
-            response.setIdChiTietKichBan(entity.getIdChiTietKichBan());
             response.setMaKichBan(entity.getMaKichBan());
             response.setRows(entity.getRows());
             response.setThongSo(entity.getThongSo());
@@ -399,27 +409,39 @@ public String postChiTietKichBan(List<ChiTietKichBanRequest> requests){
     }
     //? cap nhat thong so kich ban
     public String putChiTietKichBan(List<ChiTietKichBanRequest> requestList){
-        for (ChiTietKichBanRequest request:requestList){
+        for (ChiTietKichBanRequest request:requestList) {
             ChiTietKichBanEntity entity = this.chiTietKichBanRepository.findAllByIdChiTietKichBan(request.getIdChiTietKichBan());
-            entity.setThongSo(request.getThongSo());
-            entity.setMinValue(request.getMinValue());
-            entity.setMaxValue(request.getMaxValue());
-            entity.setTrungBinh(request.getTrungBinh());
-            entity.setDonVi(request.getDonVi());
-            this.chiTietKichBanRepository.save(entity);
+            // cap nhat thong so da co
+            if (entity != null) {
+                entity.setThongSo(request.getThongSo());
+                entity.setMinValue(request.getMinValue());
+                entity.setMaxValue(request.getMaxValue());
+                entity.setTrungBinh(request.getTrungBinh());
+                entity.setDonVi(request.getDonVi());
+                this.chiTietKichBanRepository.save(entity);
+            }else { // them moi thong so chua co
+                ChiTietKichBanEntity entity1 = new ChiTietKichBanEntity();
+                entity1.setMaKichBan(request.getMaKichBan());
+                entity1.setThongSo(request.getThongSo());
+                entity1.setMinValue(request.getMinValue());
+                entity1.setMaxValue(request.getMaxValue());
+                entity1.setTrungBinh(request.getTrungBinh());
+                entity1.setDonVi(request.getDonVi());
+                this.chiTietKichBanRepository.save(entity1);
+            }
         }
         return "Cap nhat thong so kich ban thanh cong";
     }
     // ☺ xoa kich ban
     public void delKichBan(String maKichBan){
-        List<KichBanEntity> entities = this.kichBanRepository.findAllByMaKichBan(maKichBan);
-        if (entities.isEmpty()){
+        KichBanEntity entities = this.kichBanRepository.findAllByMaKichBan(maKichBan);
+        if (entities == null){
             log.info("khong tim thay kich ban");
         }else {
             // tim kiem thong tin chi tiet kich ban
             List<ChiTietKichBanEntity> entityList = this.chiTietKichBanRepository.findAllByMaKichBan(maKichBan);
             this.chiTietKichBanRepository.deleteAll(entityList);
-            this.kichBanRepository.deleteAll(entities);
+            this.kichBanRepository.delete(entities);
             log.info("xoa kich ban thanh cong");
         }
     }
@@ -433,7 +455,14 @@ public String postChiTietKichBan(List<ChiTietKichBanRequest> requests){
             log.info("xoa thong so kich ban thanh cong");
         }
     }
-    // ! xem chi tiet kich ban
+    //? xem chi tiet kich ban
+    public KichBanResponse chiTietKichBan(String idKichBan){
+        KichBanEntity entity = this.kichBanRepository.findAllByMaKichBan(idKichBan);
+        KichBanResponse response = getKichBanResponse(entity);
+        response.setKichBanList(entity.getChiTietKichBan());
+        log.info("sucess !");
+        return  response;
+    }
     //----------------------------------------- * ----------------------------------------------------------------------
     //---------------------------                    San xuat hang ngay          ---------------------------------------
     // ☺ Ham set gia tri cho tung thuoc tinh
@@ -498,7 +527,6 @@ public String postChiTietKichBan(List<ChiTietKichBanRequest> requests){
         // Note lưu thông tin thông số sản xuất hàng ngày
         for (ChiTietKichBanEntity entity1: entities){
             ChiTietSanXuatEntity entity2 = new ChiTietSanXuatEntity();
-            entity2.setIdSanXuatHangNgay(entity.getIdSanXuatHangNgay());
             entity2.setMaKichBan(entity1.getMaKichBan());
             entity2.setRows(entity1.getRows());
             entity2.setThongSo(entity1.getThongSo());
@@ -517,7 +545,6 @@ public String postChiTietKichBan(List<ChiTietKichBanRequest> requests){
         log.info("xem danh sach kich ban");
         for (ChiTietSanXuatEntity entity:entities){
             ChiTietSanXuatResponse response = new ChiTietSanXuatResponse();
-            response.setIdChiTietSanXuat(entity.getIdChiTietSanXuat());
             response.setMaKichBan(entity.getMaKichBan());
             response.setRows(entity.getRows());
             response.setThongSo(entity.getThongSo());
@@ -531,14 +558,25 @@ public String postChiTietKichBan(List<ChiTietKichBanRequest> requests){
     }
     //? Cap nhat noi dung san xuat hang ngay (1)
     public String putChiTietSanXuat(List<ChiTietSanXuatRequest> requestList){
-        for (ChiTietSanXuatRequest request :requestList){
+        for (ChiTietSanXuatRequest request :requestList) {
             ChiTietSanXuatEntity entity = this.chiTietSanXuatRepository.findAllByIdChiTietSanXuat(request.getIdChiTietSanXuat());
-            entity.setThongSo(request.getThongSo());
-            entity.setMinValue(request.getMinValue());
-            entity.setMaxValue(request.getMaxValue());
-            entity.setTrungBinh(request.getTrungBinh());
-            entity.setDonVi(request.getDonVi());
-            this.chiTietSanXuatRepository.save(entity);
+            if (entity != null) {
+                entity.setThongSo(request.getThongSo());
+                entity.setMinValue(request.getMinValue());
+                entity.setMaxValue(request.getMaxValue());
+                entity.setTrungBinh(request.getTrungBinh());
+                entity.setDonVi(request.getDonVi());
+                this.chiTietSanXuatRepository.save(entity);
+            }else {
+                ChiTietSanXuatEntity entity1 = new ChiTietSanXuatEntity();
+                entity1.setMaKichBan(request.getMaKichBan());
+                entity1.setThongSo(request.getThongSo());
+                entity1.setMinValue(request.getMinValue());
+                entity1.setMaxValue(request.getMaxValue());
+                entity1.setTrungBinh(request.getTrungBinh());
+                entity1.setDonVi(request.getDonVi());
+                this.chiTietSanXuatRepository.save(entity1);
+            }
         }
         return "Cap nhat noi dung san xuat thanh cong";
     }
@@ -552,6 +590,12 @@ public String postChiTietKichBan(List<ChiTietKichBanRequest> requests){
             log.info("xoa thong so thanh cong");
         }
     }
-    // ! (1)them moi thong so trong noi dung san xuat hang ngay
-    //! xem chi tiet noi dung 1 kich ban san xuat hang ngay
+    //? xem chi tiet noi dung 1 kich ban san xuat hang ngay
+    public SanXuatHangNgayResponse chiTietSanXuat (String maKichBan){
+        SanXuatHangNgayEntity entity = this.sanXuatHangNgayRepository.findAllByMaKichBan(maKichBan);
+        SanXuatHangNgayResponse response = getSanXuatHangNgayResponse(entity);
+        response.setChiTietSanXuat(entity.getChiTietSanXuat());
+        log.info("thanh cong");
+        return response;
+    }
 }

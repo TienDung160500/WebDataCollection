@@ -4,6 +4,7 @@ import com.RangDong.RD_KhaiBaoThongSo.controller.request.*;
 import com.RangDong.RD_KhaiBaoThongSo.controller.response.*;
 import com.RangDong.RD_KhaiBaoThongSo.repository.entity.KichBanEntity;
 import com.RangDong.RD_KhaiBaoThongSo.repository.entity.SanXuatHangNgayEntity;
+import com.RangDong.RD_KhaiBaoThongSo.repository.entity.ThietBiEntity;
 import com.RangDong.RD_KhaiBaoThongSo.service.UserService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -42,10 +43,10 @@ public class UserController {
         log.info("success");
         return responseList;
     }
-
-    @GetMapping("/quan-ly-thong-so/ma-thong-so/{maThongSo}")
-    public List<QuanLyThongSoResponse> getByMaThongSo(@PathVariable String maThongSo){
-        List<QuanLyThongSoResponse> responseList = this.userService.getByMaThongSo(maThongSo);
+// Note test
+    @GetMapping("/test/{maThongSo}")
+    public ThietBiResponse getByMaThongSo(@PathVariable Integer maThongSo){
+        ThietBiResponse responseList = this.userService.getByMaThietBi(maThongSo);
         return responseList;
     }
 
@@ -131,7 +132,12 @@ public class UserController {
     public void putThongSoMay(@RequestBody List<ThongSoMayRequest> requestList){
         this.userService.putThongSoMay(requestList);
     }
-    //!xem chi tiết thông số thiet bi
+    //?xem chi tiết thông số thiet bi
+    @GetMapping("/thiet-bi/chi-tiet-thiet-bi/{idThietBi}")
+    public ThietBiResponse getAllByMaThongSo(@PathVariable Integer idThietBi){
+        ThietBiResponse responseList = this.userService.getAllByIdThietBi(idThietBi);
+        return responseList;
+    }
     //------------------------------------------------ * ---------------------------------------------------------------
 
     //---------------------------------------              Kich ban                ------------------------------------
@@ -161,7 +167,7 @@ public class UserController {
         return result;
     }
     //?Xem danh sach thong so kich ban
-    @GetMapping("/kich-ban/chi-tiet-kich-ban/{maKichBan}")
+    @GetMapping("/kich-ban/thong-so-kich-ban/{maKichBan}")
     public List<ChiTietKichBanResponse> getAllByMaKichBan(@PathVariable String maKichBan){
         List<ChiTietKichBanResponse> responseList = this.userService.getAllByMaKichBan(maKichBan);
         return responseList;
@@ -182,7 +188,12 @@ public class UserController {
     public  void delByIdChiTietKichBan(@PathVariable Integer idChiTietKichBan){
         this.userService.delByIdChiTietKichBan(idChiTietKichBan);
     }
-    //!  xem chi tiet kich ban
+    //?  xem chi tiet kich ban
+    @GetMapping("/kich-ban/chi-tiet-kich-ban/{maKichBan}")
+    public KichBanResponse chiTietKichBan(@PathVariable String maKichBan){
+        KichBanResponse responseList = this.userService.chiTietKichBan(maKichBan);
+        return responseList;
+    }
     //-------------------------------------------------- * -------------------------------------------------------------
 
     //---------------------------                San xuat hang ngay              ---------------------------------------
@@ -222,6 +233,10 @@ public class UserController {
     public void delByIdChiTietSanXuat(@PathVariable Integer idChiTietSanXuat){
         this.userService.delByIdChiTietSanXuat(idChiTietSanXuat);
     }
-    // ?(1)them moi thong so trong noi dung san xuat hang ngay
-    // !xem chi tiet noi dung 1 kich ban san xuat hang ngay
+    // ?xem chi tiet noi dung 1 kich ban san xuat hang ngay
+    @GetMapping("/san-xuat-hang-ngay/chi-tiet/{maKichBan}")
+    public SanXuatHangNgayResponse chiTietSanXuat(@PathVariable String maKichBan){
+        SanXuatHangNgayResponse response = this.userService.chiTietSanXuat(maKichBan);
+        return response;
+    }
 }

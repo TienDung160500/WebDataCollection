@@ -37,6 +37,7 @@ public interface KichBanRepository extends  JpaRepository<KichBanEntity, Integer
                                               @Param("k")String updateBy,
                                               @Param("m")String status);
 //☺ Tim kiem theo ma kich ban
-    public List<KichBanEntity> findAllByMaKichBan(String maKichBan);
-
+    public KichBanEntity findAllByMaKichBan(String maKichBan);
+//! tim kiem theo idkichban
+    public KichBanEntity findAllByIdKichBan(Integer idKichBan);
 }

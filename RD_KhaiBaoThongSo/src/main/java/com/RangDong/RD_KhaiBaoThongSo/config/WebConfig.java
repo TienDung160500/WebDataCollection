@@ -6,11 +6,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
+import java.util.Properties;
+
 @Slf4j
 @Configuration
 public class WebConfig {
@@ -22,7 +29,9 @@ public class WebConfig {
         //cho  phép backend nhận header chứa thông tin xác thực
         config.setAllowCredentials(true);
         //chứa url của front-end
-        config.addAllowedOrigin("http://192.168.18.195:4200");
+        config.addAllowedOrigin("http://192.168.18.195:51556");
+//        config.addAllowedOrigin("http://localhost:4200");
+
         //các phần header đặc trưng mà ưn dụng phải chấp nhận
         config.setAllowedHeaders(Arrays.asList(
                 HttpHeaders.AUTHORIZATION,

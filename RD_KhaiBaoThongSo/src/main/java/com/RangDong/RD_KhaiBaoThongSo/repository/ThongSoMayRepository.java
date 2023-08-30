@@ -25,4 +25,5 @@ public interface ThongSoMayRepository extends JpaRepository<ThongSoMayEntity, In
     public List<ThongSoMayEntity> findAllByMaThietBi(String maThietBi);
     //☺ Lấy danh sách thông số theo danh sách id thông số thiết bị
     public ThongSoMayEntity findAllByIdThongSoThietBi(Integer idThongSoThietBi);
+
 }

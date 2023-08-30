@@ -1,5 +1,6 @@
 package com.RangDong.RD_KhaiBaoThongSo.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,9 +12,6 @@ public class ChiTietSanXuatEntity {
     @Column(name = "id_chi_tiet_san_xuat")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idChiTietSanXuat;
-
-    @Column(name = "id_san_xuat_hang_ngay")
-    private Integer idSanXuatHangNgay;
 
     @Column(name = "ma_kich_ban")
     private String maKichBan;
@@ -36,4 +34,8 @@ public class ChiTietSanXuatEntity {
     @Column(name = "don_vi")
     private String donVi;
 
+    @ManyToOne
+    @JoinColumn(name = "id_san_xuat_hang_ngay")
+    @JsonBackReference
+    private SanXuatHangNgayEntity sanXuatHangNgay;
 }
