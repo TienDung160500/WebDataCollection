@@ -100,7 +100,7 @@ public class UserService {
         }
     }
 
-    //? them moi thong so
+    //☺ them moi thong so
     public String postThongSo(List<QuanLyThongSoRequest> requests) {
         for (QuanLyThongSoRequest request : requests) {
             QuanLyThongSoEntity entity = new QuanLyThongSoEntity();
@@ -126,7 +126,7 @@ public class UserService {
         }
         return responseList;
     }
-    //? cap nhat thong so
+    //☺ cap nhat thong so
     public String putThongSo(QuanLyThongSoRequest request, String maThongSo) {
         QuanLyThongSoEntity entity = this.quanLyThongSoRepository.getByMaThongSo(maThongSo);
         entity.setMaThongSo(request.getMaThongSo());
@@ -300,7 +300,7 @@ public class UserService {
             }
         }
     }
-    //? xem chi tiết thông số thiet bi
+    //☺ xem chi tiết thông số thiet bi
     public  ThietBiResponse getAllByIdThietBi (Integer idThietBi){
         ThietBiEntity entity = this.thietBiRepository.getAllByIdThietBi(idThietBi);
         ThietBiResponse response = getThietBiResponse(entity);

@@ -10,12 +10,16 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./machine-parameter.component.css']
 })
 export class MachineParameterComponent {
+  // khoi tao input thiet bi
 @Input() maThietBi ='';
 @Input() loaiThietBi ='';
 @Input() dayChuyen ='';
 @Input() status ='';
 @Input() ngayTao =null;
 @Input() timeUpdate =null;
+// khoi tao input chi tiet thiet bi
+@Input() tenThongSo =''
+@Input() phanLoai=''
 
   searchTerm: string = '';
 
@@ -77,7 +81,15 @@ delThietBi(del:string){
     })
   }
 }
-//-------------------------------------- Them moi -----------------
+//-------------------------------------- Danh sach chi tiet thiet bi -----------------
+getChiTietThietBi(){
+  this.searchResults = [];
+  this.http.get<any>('http://localhost:8080/thiet-bi/chi-tiet-thiet-bi/13').subscribe((res:thietBi)=>{
+  this.searchResults = res as any;
+  console.log("results: ", this.searchResults)
+  })
+}
+//----------------------------------------- Them moi thiet bi ----------------------
   isVisibleTop = false;
   isVisibleMiddle = false;
 
@@ -86,6 +98,7 @@ delThietBi(del:string){
   }
 
   showModalMiddle(): void {
+    this.getChiTietThietBi()
     this.isVisibleMiddle = true;
   }
 

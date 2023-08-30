@@ -77,6 +77,14 @@ searchTerm: string = '';
       })
     }
   }
+  //---------------------------- chi tiet kich ban -------------------------
+  chiTietKichBan(){
+    this.searchResults = [];
+  this.http.get<any>('http://localhost:8080/kich-ban/chi-tiet-kich-ban/999').subscribe((res:kichBan)=>{
+  this.searchResults = res as any;
+  console.log("results: ", this.searchResults)
+  })
+  }
   isVisibleTop = false;
   isVisibleMiddle = false;
 
@@ -85,6 +93,7 @@ searchTerm: string = '';
   }
 
   showModalMiddle(): void {
+    this.chiTietKichBan()
     this.isVisibleMiddle = true;
   }
 

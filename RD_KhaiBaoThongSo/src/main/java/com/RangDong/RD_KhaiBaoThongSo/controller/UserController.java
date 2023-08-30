@@ -55,7 +55,7 @@ public class UserController {
     public void delByMaThongSo(@PathVariable String maThongSo) {
         this.userService.delByThongSo(maThongSo);
     }
-    //? Thêm mới thông số
+    //☺ Thêm mới thông số
     @PostMapping("/quan-ly-thong-so/them-moi-thong-so")
     public String postThongSo(@RequestBody List<QuanLyThongSoRequest> requests) {
         String result = this.userService.postThongSo(requests);
@@ -68,7 +68,7 @@ public class UserController {
         return responseList;
     }
 
-    //? cập nhật thông số
+    //☺ cập nhật thông số
     @PutMapping("/quan-ly-thong-so/cap-nhat-thong-so/{maThongSo}")
     public String putThongSo(@PathVariable String maThongSo,
                              @RequestBody QuanLyThongSoRequest request) {
@@ -132,7 +132,7 @@ public class UserController {
     public void putThongSoMay(@RequestBody List<ThongSoMayRequest> requestList){
         this.userService.putThongSoMay(requestList);
     }
-    //?xem chi tiết thông số thiet bi
+    //☺xem chi tiết thông số thiet bi
     @GetMapping("/thiet-bi/chi-tiet-thiet-bi/{idThietBi}")
     public ThietBiResponse getAllByMaThongSo(@PathVariable Integer idThietBi){
         ThietBiResponse responseList = this.userService.getAllByIdThietBi(idThietBi);

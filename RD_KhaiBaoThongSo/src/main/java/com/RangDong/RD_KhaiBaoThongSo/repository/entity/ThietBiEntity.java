@@ -38,7 +38,7 @@ public class ThietBiEntity {
     @Column(name = "status")
     private String status;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "thietBi")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "thietBi",cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<ThongSoMayEntity> thongSoMayEntities;
 

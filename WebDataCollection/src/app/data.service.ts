@@ -28,6 +28,7 @@ export class DataService {
   }
   constructor() { }
 }
+//------------------------------------- quan ly thong so 
 export interface ItemData {
   idThongSo: number
   maThongSo: string
@@ -47,6 +48,7 @@ export interface ItemDataRequest{
   updateBy: string
   status: string
 }
+//--------------------------------- thiet bi
 export interface thietBi{
   maThietBi:string,
   loaiThietBi:string,
@@ -55,7 +57,18 @@ export interface thietBi{
   timeUpdate:Date,
   updateBy:string,
   status:string
+  listThongSo: chiTietThietBi
 }
+export interface chiTietThietBi{
+  thongSo:string,
+  moTa:string,
+  status:string,
+  phanLoai:string
+}
+export interface thietBiRequest{
+  
+}
+//------------------------------ kich ban
 export interface kichBan{
   maKichBan:string,
   maThietBi:string,
@@ -66,5 +79,14 @@ export interface kichBan{
   ngayTao:Date,
   timeUpdate:Date,
   updateBy:string,
-  status:string
+  status:string,
+  listThongSo:chiTietKichBan
+}
+export interface chiTietKichBan{
+  thongSo:string,
+  minValue: number,
+  maxValue:number,
+  trungBinh:number,
+  donvi:string,
+  phanLoai:string
 }
