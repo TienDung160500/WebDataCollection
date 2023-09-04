@@ -127,7 +127,7 @@ public class UserService {
         return responseList;
     }
     //☺ cap nhat thong so
-    public String putThongSo(QuanLyThongSoRequest request, String maThongSo) {
+    public void putThongSo(QuanLyThongSoRequest request, String maThongSo) {
         QuanLyThongSoEntity entity = this.quanLyThongSoRepository.getByMaThongSo(maThongSo);
         entity.setMaThongSo(request.getMaThongSo());
         entity.setTenThongSo(request.getTenThongSo());
@@ -137,7 +137,6 @@ public class UserService {
         entity.setStatus(request.getStatus());
         this.quanLyThongSoRepository.save(entity);
         log.info("Cap nhat thanh cong !");
-        return "Cap nhat thanh cong !";
     }
 
     //☺ su kien tim kiem
@@ -182,8 +181,8 @@ public class UserService {
     }
 
     // Note ( Function test )
-    public  ThietBiResponse getByMaThietBi (Integer idThietBi){
-        ThietBiEntity entity = this.thietBiRepository.getAllByIdThietBi(idThietBi);
+    public  ThietBiResponse getByMaThietBi (String maThietBi){
+        ThietBiEntity entity = this.thietBiRepository.getAllByMaThietBi(maThietBi);
         ThietBiResponse response = getThietBiResponse(entity);
         response.setThongSoMayResponseList(entity.getThongSoMayEntities());
         log.info("entity: "+ entity.getThongSoMayEntities());
@@ -219,23 +218,24 @@ public class UserService {
     //----------------------- Chức năng thêm mới thiết bị -----------------------------------------------
 
     //? Lấy thông tin loại thiết bị theo mã thiết bị từ table thiết bị
-        // ? thêm mới thiết bị vào DB
-    public String postThietBi(ThietBiRequest request) {
+        // ☺ thêm mới thiết bị vào DB
+    public void postThietBi(List<ThietBiRequest> requests) {
         log.info("them moi thiet bi");
-        ThietBiEntity entity = new ThietBiEntity();
-        entity.setMaThietBi(request.getMaThietBi());
-        entity.setLoaiThietBi(request.getLoaiThietBi());
-        entity.setDayChuyen(request.getDayChuyen());
-        entity.setNgayTao(request.getNgayTao());
-        entity.setTimeUpdate(request.getTimeUpdate());
-        entity.setUpdateBy(entity.getUpdateBy());
-        entity.setStatus(request.getStatus());
-        this.thietBiRepository.save(entity);
-        return "them moi thiet bi thanh cong !";
+        for(ThietBiRequest request: requests) {
+            ThietBiEntity entity = new ThietBiEntity();
+            entity.setMaThietBi(request.getMaThietBi());
+            entity.setLoaiThietBi(request.getLoaiThietBi());
+            entity.setDayChuyen(request.getDayChuyen());
+            entity.setNgayTao(request.getNgayTao());
+            entity.setTimeUpdate(request.getTimeUpdate());
+            entity.setUpdateBy(entity.getUpdateBy());
+            entity.setStatus(request.getStatus());
+            this.thietBiRepository.save(entity);
+        }
     }
 
         //? thêm mới thông số thiết b vào DB
-    public String postThongSoMay(List<ThongSoMayRequest> requestList) {
+    public void postThongSoMay(List<ThongSoMayRequest> requestList) {
         Integer row = 0;
         for (ThongSoMayRequest request : requestList) {
             ThongSoMayEntity entity = new ThongSoMayEntity();
@@ -248,7 +248,7 @@ public class UserService {
             entity.setPhanLoai(request.getPhanLoai());
             this.thongSoMayRepository.save(entity);
         }
-        return "cai dat thong so thiet bi thanh cong !";
+        log.info("cai dat thong so thiet bi thanh cong !");
     }
     //----------------------- Chức năng cập nhật thông số thiết bị -----------------------------------------------
     //? xem danh sách thông số thiết bị
@@ -301,8 +301,8 @@ public class UserService {
         }
     }
     //☺ xem chi tiết thông số thiet bi
-    public  ThietBiResponse getAllByIdThietBi (Integer idThietBi){
-        ThietBiEntity entity = this.thietBiRepository.getAllByIdThietBi(idThietBi);
+    public  ThietBiResponse getAllByIdThietBi (String maThietBi){
+        ThietBiEntity entity = this.thietBiRepository.getAllByMaThietBi(maThietBi);
         ThietBiResponse response = getThietBiResponse(entity);
         response.setThongSoMayResponseList(entity.getThongSoMayEntities());
         log.info("entity: "+ entity.getThongSoMayEntities());

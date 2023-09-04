@@ -1,0 +1,3 @@
+Thông số máy 
+ - Format date time "yyyy:MM:dd hh:mm:ss" - yyyy:MM:dd
+ - Pop up tìm kiếm theo các trường ( click vào button -> hiển thị danh sách tương ứng theo trường)

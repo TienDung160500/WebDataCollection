@@ -60,13 +60,23 @@ export interface thietBi{
   listThongSo: chiTietThietBi
 }
 export interface chiTietThietBi{
+  maThietBi:string,
+  loaiThietBi:string,
+  dayChuyen:string,
   thongSo:string,
   moTa:string,
   status:string,
   phanLoai:string
 }
 export interface thietBiRequest{
-  
+  maThietBi:string,
+  loaiThietBi:string,
+  dayChuyen:string,
+  ngayTao:number,
+  timeUpdate:number,
+  updateBy:string,
+  status:string,
+  phanLoai:string
 }
 //------------------------------ kich ban
 export interface kichBan{

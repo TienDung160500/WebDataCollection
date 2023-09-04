@@ -1,8 +1,10 @@
+import { Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { NzButtonSize } from 'ng-zorro-antd/button';
-import { DataService, thietBi } from './../data.service';
+import { DataService, thietBi, chiTietThietBi, thietBiRequest } from './../data.service';
 import { ItemData } from './../item-data';
 import { Component, Input } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-machine-parameter',
@@ -10,86 +12,153 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./machine-parameter.component.css']
 })
 export class MachineParameterComponent {
-  // khoi tao input thiet bi
-@Input() maThietBi ='';
-@Input() loaiThietBi ='';
-@Input() dayChuyen ='';
-@Input() status ='';
-@Input() ngayTao =null;
-@Input() timeUpdate =null;
-// khoi tao input chi tiet thiet bi
-@Input() tenThongSo =''
-@Input() phanLoai=''
+  // ----- set input
+  @Input() maThietBi = '';
+  @Input() loaiThietBi = '';
+  @Input() dayChuyen = '';
+  @Input() status = '';
+  @Input() ngayTao = null;
+  @Input() timeUpdate = null;
+  @Input() thongSo = '';
+  @Input() moTa = '';
+  @Input() phanLoai = '';
 
   searchTerm: string = '';
 
+  listOfData: ItemData[] = [];
   searchResults: thietBi[] = [];
+  editCache: { [key: string]: { edit: boolean; data: ItemData5 } } = {};
+  listOfData5: ItemData5[] = [];
 
-  constructor(private dataService: DataService,private http:HttpClient) { }
 
+  constructor(private dataService: DataService, private modalService: NzModalService, private http: HttpClient) { }
+
+  // thông tin
+  startEditInfor(id: string): void {
+    this.editCache[id].edit = true;
+  }
+
+  cancelEdit(id: string): void {
+    const index = this.listOfData5.findIndex(item => item.id === id);
+    this.editCache[id] = {
+      data: { ...this.listOfData5[index] },
+      edit: false
+    };
+  }
+
+  saveEdit(id: string): void {
+    const index = this.listOfData5.findIndex(item => item.id === id);
+    Object.assign(this.listOfData5[index], this.editCache[id].data);
+    this.editCache[id].edit = false;
+  }
+
+  updateEditCache(): void {
+    this.listOfData5.forEach(item => {
+      this.editCache[item.id] = {
+        edit: false,
+        data: { ...item }
+      };
+    });
+  }
 
   ngOnInit(): void {
-    if(sessionStorage.getItem('danhSachThietBi')===null){
+    if (sessionStorage.getItem('danhSachThietBi') === null) {
       this.getDanhSachThietBi();
-    }else{
+    } else {
+      console.log('lay danh sach tu cache');
       var result = sessionStorage.getItem('danhSachThietBi');
       if (result) {
-        console.log('lấy danh sách từ cache ')
         this.searchResults = JSON.parse(result);
       }
     }
-    }
-//--------------------lay danh sach thiet bi -------------------
-getDanhSachThietBi(){
-  this.http.get<any>('http://localhost:8080/thiet-bi').subscribe(res =>{
-    console.log('lấy danh sách từ DB');
-      this.searchResults = res as thietBi[];
-      console.log(this.searchResults);
-      sessionStorage.setItem('danhSachThietBi', JSON.stringify(res));
-  })
-}
-//---------------------------- Tim kiem ---------------------------------(ok)
-timKiemThietBi(){
-  this.searchResults = [];
-    var timKiem = {maThietBi:this.maThietBi,loaiThietBi:this.loaiThietBi,dayChuyen:this.dayChuyen,ngayTao:this.ngayTao,timeUpdate:this.timeUpdate,updateBy:"",status:this.status}
-      if(sessionStorage.getItem('thiet bi: '+JSON.stringify(timKiem))=== null){
-      this.http.post<any>('http://localhost:8080/thiet-bi/tim-kiem',timKiem).subscribe(res => {
-        console.log("tim kiem: ", res)
-        this.searchResults = res as any;
-        sessionStorage.setItem(JSON.stringify(timKiem),JSON.stringify(res));
-      })
-    }else{
-      var result = sessionStorage.getItem(JSON.stringify(timKiem));
-      if (result) {
-        console.log('lay tu cache')
-        console.log("ma thong so: ", timKiem)
-        this.searchResults = JSON.parse(result);
-    }
   }
-}
-//---------------------------- del thiet bi ---------------------------
-delThietBi(del:string){
-  var result = confirm("Xác nhận xoá thiet bi !");
-  console.log("ma thiet bi: ",del)
-  if (result) {
-    this.http.delete('http://localhost:8080/thiet-bi/del-thiet-bi/' + del).subscribe(() => {
-      alert('Xoá thành công');
-      //------------ xoá thông tin thiet bi khỏi cache -----------------
-      sessionStorage.removeItem(this.maThietBi);
-      //-------------- cập nhật danh sách thông số trong cache -----------
-      this.getDanhSachThietBi();
+  //------------------------- danh sach thiet bi --------------------------------
+  getDanhSachThietBi() {
+    this.http.get<any>('http://192.168.18.145:8080/thiet-bi').subscribe(res => {
+      console.log('danh sách thiet bi'); console.log(res)
+      this.searchResults = res as any;
+      sessionStorage.setItem('danhSachThietBi', JSON.stringify(res));
+
     })
   }
-}
-//-------------------------------------- Danh sach chi tiet thiet bi -----------------
-getChiTietThietBi(){
+  //------------------------------ su kien tim kiem ------------------------------
+  timKiemThietBi() {
+    //xoa du lieu cu
+    this.searchResults = [];
+    //request den server
+    var timKiem = { maThietBi: this.maThietBi, loaiThietBi: this.loaiThietBi, dayChuyen: this.dayChuyen, ngayTao: this.ngayTao, timeUpdate: this.timeUpdate, updateBy: '', status: this.status };
+    if (sessionStorage.getItem('thiet bi' + JSON.stringify(timKiem)) === null) {
+      this.http.post<any>('http://192.168.18.145:8080/thiet-bi/tim-kiem', timKiem).subscribe(res => {
+        console.log("tim kiem", res);
+        //luu du lieu tra ve de hien thi len front-end  
+        this.searchResults = res as any;
+        sessionStorage.setItem('thiet bi' + JSON.stringify(timKiem), res);
+      })
+    } else {
+      var result = sessionStorage.getItem('thiet bi' + JSON.stringify(timKiem))
+      if (result) {
+        console.log('lay du lieu tren cache');
+        this.searchResults = JSON.parse(result);
+      }
+    }
+  }
+  //------------------------------------------------ del thiet bi -----------------------------------
+  delThietBi(del: string) {
+    var result = confirm('Are you sure');
+    if (result) {
+      this.http.delete(`http://192.168.18.145:8080/thiet-bi/del-thiet-bi/${del}`).subscribe(() => {
+        alert('xoa thanh cong');
+        // xoa thong tin dang luu trong session
+        sessionStorage.removeItem(del);
+        this.getDanhSachThietBi();
+      })
+    }
+  }
+//---------------------- them moi thiet bi ----------------------
+postThietBi(){
   this.searchResults = [];
-  this.http.get<any>('http://localhost:8080/thiet-bi/chi-tiet-thiet-bi/13').subscribe((res:thietBi)=>{
-  this.searchResults = res as any;
-  console.log("results: ", this.searchResults)
+  this.http.post('http://localhost:8080/thiet-bi/them-moi-thiet-bi',this.thietBi).subscribe(res =>{
+    console.log("message: "+res);
+
+    this.getDanhSachThietBi();
   })
 }
-//----------------------------------------- Them moi thiet bi ----------------------
+//------------------------------------------ xem chi tiết thông số thiết bị ----------------------------------------
+
+  luuThongSo(save: any) {
+    this.searchResults = [];
+
+    const cacheKey = 'thiet bi' + JSON.stringify(save);
+    const cachedData = sessionStorage.getItem(cacheKey);
+
+    if (cachedData === null) {
+      this.http.get<any>('http://192.168.18.145:8080//thiet-bi/chi-tiet-thiet-bi/4', save).subscribe(res => {
+        console.log("tim kiem", res);
+
+        this.searchResults = res as any;
+        sessionStorage.setItem(cacheKey, JSON.stringify(res));
+      });
+    } else {
+      this.searchResults = JSON.parse(cachedData);
+    }
+  }
+
+  hienThiDuLieuCache(save: any) {
+    const cacheKey = 'thiet bi' + JSON.stringify(save);
+    const cachedData = sessionStorage.getItem(cacheKey);
+
+    if (cachedData) {
+      this.searchResults = JSON.parse(cachedData);
+    } else {
+      this.searchResults = []
+    }
+  }
+
+  putKichBan() {
+    // this.http.put('url', body)
+    // /thiet-bi/chi-tiet-thiet-bi/{idThietBi}
+  }
+  //----------------------------------------- tương tác với thêm mới 
   isVisibleTop = false;
   isVisibleMiddle = false;
 
@@ -98,7 +167,7 @@ getChiTietThietBi(){
   }
 
   showModalMiddle(): void {
-    this.getChiTietThietBi()
+    this.thietBi = [];
     this.isVisibleMiddle = true;
   }
 
@@ -112,11 +181,52 @@ getChiTietThietBi(){
 
   handleOkMiddle(): void {
     console.log('click ok');
+    console.log("data: ", this.thietBi)
+    this.postThietBi()
     this.isVisibleMiddle = false;
   }
 
   handleCancelMiddle(): void {
     this.isVisibleMiddle = false;
+  }
+
+  // thông tin chi tiết
+
+  isVisibleTopInfor = false;
+  isVisibleMiddleInfor = false;
+
+  showModalTopInfor(): void {
+    this.isVisibleTopInfor = true;
+  }
+
+  showModalMiddleInfor(): void {
+    this.isVisibleMiddleInfor = true;
+  }
+
+  handleOkTopInfor(): void {
+    this.isVisibleTopInfor = false;
+  }
+
+  handleCancelTopInfor(): void {
+    this.isVisibleTopInfor = false;
+  }
+
+  handleOkMiddleInfor(): void {
+    console.log('click ok');
+    this.isVisibleMiddleInfor = false;
+  }
+
+  handleCancelMiddleInfor(): void {
+    this.isVisibleMiddleInfor = false;
+  }
+
+  showConfirm(): void {
+    this.modalService.confirm({
+      nzTitle: 'Confirm',
+      nzContent: 'Bla bla ...',
+      nzOkText: 'OK',
+      nzCancelText: 'Cancel'
+    });
   }
 
   size: NzButtonSize = 'large';
@@ -129,39 +239,146 @@ getChiTietThietBi(){
       this.expandSet.delete(id);
     }
   }
-  listOfData1 = [
-    {
-      id: 1,
-      name: 'John Brown',
-      age: 32,
-      expand: false,
-      address: 'New York No. 1 Lake Park',
-      description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.'
-    },
-    {
-      id: 2,
-      name: 'Jim Green',
-      age: 42,
-      expand: false,
-      address: 'London No. 1 Lake Park',
-      description: 'My name is Jim Green, I am 42 years old, living in London No. 1 Lake Park.'
-    },
-    {
-      id: 3,
-      name: 'Joe Black',
-      age: 32,
-      expand: false,
-      address: 'Sidney No. 1 Lake Park',
-      description: 'My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.'
-    }
-  ];
 
+  onChange(result: Date): void {
+    console.log('Selected Time: ', result);
+  }
+
+  onOk(result: Date | Date[] | null): void {
+    console.log('onOk', result);
+  }
+  // -----------------------------------------------------------------------------khai bao  thiet bi
+
+  editIdThietBi: number | null = null;
+  thietBi: thietBiRequest[] = [];
+
+  idThietBi = this.thietBi.length;
+
+  startEditThietBi(id: number): void {
+    this.editIdThietBi = id;
+  }
+
+  stopEditThietBi(): void {
+    this.editIdThietBi = null;
+  }
+
+  addRowThietBi(): void {
+    this.thietBi = [
+      ...this.thietBi,
+      {
+        maThietBi: '',
+        loaiThietBi: '',
+        dayChuyen: '',
+        ngayTao: Date.now(),
+        timeUpdate: Date.now(),
+        updateBy: '',
+        status: '',
+        phanLoai: ''
+      }
+    ];
+    console.log('add: ', this.thietBi)
+    this.idThietBi++;
+  }
+
+  deleteRowThietBi(maThietBi: string): void {
+    this.thietBi = this.thietBi.filter(d => d.maThietBi !== maThietBi);
+    console.log('del ', this.thietBi)
+  }
+  // -------------------------------------------------------------------------- them moi thong so thiet bi
+  editId: number | null = null;
+  chiTietThongSoThietBi: chiTietThietBi[] = [];
+
+  i = this.chiTietThongSoThietBi.length;
+
+  startEditChiTietThongSoThietBi(id: number): void {
+    this.editId = id;
+  }
+
+  stopEditChiTietThongSoThietBi(): void {
+    this.editId = null;
+  }
+
+  addRowChiTietThongSoThietBi(): void {
+    this.chiTietThongSoThietBi = [
+      ...this.chiTietThongSoThietBi,
+      {
+        maThietBi:'',
+        loaiThietBi:'',
+        dayChuyen:'',
+        thongSo: '',
+        moTa: '',
+        status: '',
+        phanLoai: ''
+      }
+    ];
+    console.log('add: ', this.chiTietThongSoThietBi)
+    this.i++;
+  }
+
+  deleteRowChiTietThongSoThietBi(thongSo: string): void {
+    this.chiTietThongSoThietBi = this.chiTietThongSoThietBi.filter(d => d.thongSo !== thongSo);
+    console.log('del ', this.chiTietThongSoThietBi)
+  }
+//------------------------------------------------------ cap nhat thong so thiet bi ----------------------------------------
+editId: number | null = null;
+  chiTietThongSoThietBi: chiTietThietBi[] = [];
+
+  i = this.chiTietThongSoThietBi.length;
+
+  startEditChiTietThongSoThietBi(id: number): void {
+    this.editId = id;
+  }
+
+  stopEditChiTietThongSoThietBi(): void {
+    this.editId = null;
+  }
+
+  addRowChiTietThongSoThietBi(): void {
+    this.chiTietThongSoThietBi = [
+      ...this.chiTietThongSoThietBi,
+      {
+        maThietBi:'',
+        loaiThietBi:'',
+        dayChuyen:'',
+        thongSo: '',
+        moTa: '',
+        status: '',
+        phanLoai: ''
+      }
+    ];
+    console.log('add: ', this.chiTietThongSoThietBi)
+    this.i++;
+  }
+
+  deleteRowChiTietThongSoThietBi(thongSo: string): void {
+    this.chiTietThongSoThietBi = this.chiTietThongSoThietBi.filter(d => d.thongSo !== thongSo);
+    console.log('del ', this.chiTietThongSoThietBi)
+  }
 }
-
 export interface ItemData1 {
+  status: any;
+  updateBy: any;
+  timeUpdate: any;
+  tenThongSo: any;
+  ngayTao: any;
+  idThongSo: any;
+  maThongSo: any;
   STT: number,
   code_parameter: number,
   name_parameter: string,
   date: string,
   username: string,
+}
+export interface ItemData4 {
+  id: string;
+  name: string;
+  age: string;
+  address: string;
+}
+
+export interface ItemData5 {
+  id: string;
+  name: string;
+  age: number;
+  address: string;
 }

@@ -4,7 +4,9 @@
     <ul nz-menu nzTheme="dark" nzMode="inline">
       <li nz-menu-item>
         <span nz-icon nzType="home" nzTheme="outline"></span>
-        <span>Trang chủ</span>
+        <span>Trang chủ
+              <a routerLink="/home"></a>
+        </span>
       </li>
 
       <li nz-submenu nzTitle="Quản lý thông số" nzIcon="control">
@@ -26,7 +28,9 @@
       </li>
       <li nz-submenu nzTitle="Sản xuất hàng ngày" nzIcon="folder-open">
         <ul>
-          <li nz-menu-item>Thông tin</li>
+          <li nz-menu-item>Thông tin
+            <a routerLink="/thong-tin-san-xuat"></a>
+          </li>
         </ul>
       </li>
     </ul>
@@ -41,55 +45,189 @@
         <nz-breadcrumb-item>Quản lý thông số</nz-breadcrumb-item>
         <nz-breadcrumb-item>Thông số máy</nz-breadcrumb-item>
 
-        <button nz-button nzType="primary" (click)="showModalMiddle()" style="position: absolute; right: 200px;">Thiết bị
+        <button nz-button nzType="primary" (click)="showModalMiddleInfor()" style="position: absolute; right: 200px;">Thông tin
           <span nz-icon nzType="eye" nzTheme="outline"></span>
         </button>
-
+        <!--------------------------------------------------------------------- popup khai báo thiết bị------------------------------------------ -->
         <button nz-button nzType="primary" (click)="showModalMiddle()" style="position: absolute; right: 60px;">Thêm mới
           <span nz-icon nzType="plus" nzTheme="outline"></span>
         </button>
-        <!-- popup khai báo thông số máy -->
         <nz-modal [(nzVisible)]="isVisibleMiddle" nzTitle="Khai báo thông số máy" nzCentered
-          (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()" class="custom-modal">
+          (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()" class="custom-modal"
+          nzWidth="60%" nzFooter="">
           <ng-container *nzModalContent>
-            <form action="">
-              <input nz-input placeholder="Mã máy" nzSize="default" style="width: 40%" />
-              <input nz-input placeholder="Loại máy" nzSize="default"
-                style="width: 40%; right: 20px; position: absolute;" />
-            </form>
-            <nz-table #nzTable [nzData]="listOfData1" nzTableLayout="fixed" style="width: 100%;">
+              <button nz-button (click)="addRowThietBi()" nzType="primary">Add</button>
+                <br />
+                <br />
+            <nz-table #editRowTable nzBordered [nzData]="thietBi">
               <thead>
                 <tr>
-                  <th nzWidth="60px"></th>
-                  <th>Thông số</th>
-                  <th>Trạng thái</th>
-                  <th>Phân loại</th>
-                  <th>Tùy chọn</th>
+                  <th nzWidth="30%">STT</th>
+                  <th>Mã thiết bị</th>
+                  <th>Loại thiết bị</th>
+                  <th>Dây chuyền</th>
+                  <th>Trạng thái</th>
                 </tr>
               </thead>
               <tbody>
-                <ng-container *ngFor="let data of nzTable.data">
-                  <tr>
-                    <td [nzExpand]="expandSet.has(data.id)" (nzExpandChange)="onExpandChange(data.id, $event)"></td>
-                    <td>{{ data.name }}</td>
-                    <td>{{ data.age }}</td>
-                    <td><nz-input-group nzCompact>
-                      <nz-select [ngModel]="'Thông số sản phẩm'">
-                        <nz-option [nzLabel]="'Thông số sản phẩm'" [nzValue]="'Thông số sản phẩm'"></nz-option>
-                        <nz-option [nzLabel]="'Thông số máy'" [nzValue]="'Thông số máy'"></nz-option>
-                      </nz-select>
-                    </nz-input-group></td>
-                    <td>{{ data.name }}</td>
-                  </tr>
-                  <tr [nzExpand]="expandSet.has(data.id)">
-                    <span>{{ data.description }}</span>
-                  </tr>
-                </ng-container>
+                <tr *ngFor="let data of thietBi; let i = index" class="editable-row">
+
+                  <td>{{i+1}}</td>
+                  <td>
+                    <div class="editable-cell" [hidden]="editIdThietBi === i+1" (click)="startEditThietBi(i+1)">
+                      {{ data.maThietBi }}
+                    </div>
+                    <input [hidden]="editIdThietBi !== i+1" type="text" nz-input [(ngModel)]="data.maThietBi" (blur)="stopEditThietBi()" />
+                  </td>
+
+                  <td>
+                    <div class="editable-cell" [hidden]="editIdThietBi === i+1" (click)="startEditThietBi(i+1)">
+                      {{ data.loaiThietBi }}
+                    </div>
+                    <input [hidden]="editIdThietBi !== i+1" type="text" nz-input [(ngModel)]="data.loaiThietBi" (blur)="stopEditThietBi()" />
+                  </td>
+
+                  <td>
+                    <div class="editable-cell" [hidden]="editIdThietBi === i+1" (click)="startEditThietBi(i+1)">
+                      {{ data.dayChuyen }}
+                    </div>
+                    <input [hidden]="editIdThietBi !== i+1" type="text" nz-input [(ngModel)]="data.dayChuyen" (blur)="stopEditThietBi()" />
+                  </td>
+                  <td>
+                    <div class="editable-cell" [hidden]="editIdThietBi === i+1" (click)="startEditThietBi(i+1)">
+                      {{ data.status }}
+                    </div>
+                    <input [hidden]="editIdThietBi !== i+1" type="text" nz-input [(ngModel)]="data.status" (blur)="stopEditThietBi()" />
+                  </td>
+                  <td><button (click)="deleteRowThietBi(data.maThietBi)">Xoá</button></td>
+
+                  <!-- <ng-template #editTemplate>
+                    <td><input type="text" nz-input [()] /></td>
+                    <td><input type="text" nz-input [()] /></td>
+                    <td><input type="text" nz-input [()] /></td>
+                    <td><input type="text" nz-input [()] /></td>
+                  </ng-template> -->
+
+                  <!-- <td>
+                    <div class="editable-cell" [hidden]="editId === data.thongSo" (click)="startEdit(data.thongSo)">
+                      {{ data.thongSo }}
+                    </div>
+                    <input [hidden]="editId !== data.thongSo" type="text" nz-input [(ngModel)]="data.thongSo" (blur)="stopEdit()" />
+                  </td>
+                  <td>
+                    <div class="editable-cell" [hidden]="editId === data.moTa" (click)="startEdit(data.moTa)">
+                      {{ data.moTa }}
+                    </div>
+                    <input [hidden]="editId !== data.moTa" type="text" nz-input [(ngModel)]="data.moTa" (blur)="stopEdit()" /></td>
+                  <td>
+                    <div class="editable-cell" [hidden]="editId === data.phanLoai" (click)="startEdit(data.phanLoai)">
+                      {{ data.phanLoai }}
+                    </div>
+                    <input [hidden]="editId !== data.phanLoai" type="text" nz-input [(ngModel)]="data.phanLoai" (blur)="stopEdit()" /></td>
+                  <td>
+                    <div class="editable-cell" [hidden]="editId === data.status" (click)="startEdit(data.status)">
+                      {{ data.status }}
+                    </div>
+                    <input [hidden]="editId !== data.status" type="text" nz-input [(ngModel)]="data.status" (blur)="stopEdit()" /></td>
+                  <td>
+                    <a nz-popconfirm nzPopconfirmTitle="Sure to delete?" (nzOnConfirm)="deleteRow(data.thongSo)">Delete</a>
+                  </td> -->
+                </tr>
+              </tbody>
+            </nz-table>
+            <button nz-button nzType="primary" (click)="showConfirm()">Confirm</button>
+          </ng-container>
+        </nz-modal>
+
+        <!---------------------------------------------------------- thêm mới thông số thiết bị -->
+        <nz-modal [(nzVisible)]="isVisibleMiddleInfor" nzTitle="Thông tin chi tiết" nzCentered (nzOnCancel)="handleCancelMiddleInfor()"
+          (nzOnOk)="handleOkMiddleInfor()" class="custom-modal" nzWidth="auto" nzFooter="">
+          <ng-container *nzModalContent>
+            <button nz-button (click)="addRowThietBi()" nzType="primary">Add</button>
+            <!-- <nz-input-group nzCompact style="">
+              <nz-select [ngModel]="'Thông số sản phẩm'" style="width: 40%;">
+                <nz-option [nzLabel]="'Thông số sản phẩm'" [nzValue]="'Home'"></nz-option>
+                <nz-option [nzLabel]="'Thông số máy'" [nzValue]="'Company'"></nz-option>
+              </nz-select>
+            </nz-input-group> -->
+            <nz-table #editRowTable nzBordered [nzData]="chiTietThongSoThietBi" nzTableLayout="fixed">
+              <thead>
+                <tr>
+                  <th nzWidth="5%">STT</th>
+                  <th>Mã thiết bị</th>
+                  <th>Loại thiết bị</th>
+                  <th>Dây chuyền</th>
+                  <th>Thông số</th>
+                  <th>Mô tả</th>
+                  <th>Trạng thái</th>
+                  <th>Phân loại</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let data of chiTietThongSoThietBi; let i=index">
+                  <ng-container >
+                    <td>{{i+1}}</td>
+                  <td>
+                    <div class="editable-cell" [hidden]="editIdThietBi === i+1" (click)="startEditChiTietThongSoThietBi(i+1)">
+                      {{ data.maThietBi }}
+                    </div>
+                    <input [hidden]="editIdThietBi !== i+1" type="text" nz-input [(ngModel)]="data.maThietBi" (blur)="stopEditChiTietThongSoThietBi()" />
+                  </td>
+
+                  <td>
+                    <div class="editable-cell" [hidden]="editIdThietBi === i+1" (click)="startEditChiTietThongSoThietBi(i+1)">
+                      {{ data.loaiThietBi }}
+                    </div>
+                    <input [hidden]="editIdThietBi !== i+1" type="text" nz-input [(ngModel)]="data.loaiThietBi" (blur)="stopEditChiTietThongSoThietBi()" />
+                  </td>
+
+                  <td>
+                    <div class="editable-cell" [hidden]="editIdThietBi === i+1" (click)="startEditChiTietThongSoThietBi(i+1)">
+                      {{ data.dayChuyen }}
+                    </div>
+                    <input [hidden]="editIdThietBi !== i+1" type="text" nz-input [(ngModel)]="data.dayChuyen" (blur)="stopEditChiTietThongSoThietBi()" />
+                  </td>
+                  <td>
+                    <div class="editable-cell" [hidden]="editIdThietBi === i+1" (click)="startEditChiTietThongSoThietBi(i+1)">
+                      {{ data.thongSo }}
+                    </div>
+                    <input [hidden]="editIdThietBi !== i+1" type="text" nz-input [(ngModel)]="data.thongSo" (blur)="stopEditChiTietThongSoThietBi()" />
+                  </td>
+                  <td>
+                    <div class="editable-cell" [hidden]="editIdThietBi === i+1" (click)="startEditChiTietThongSoThietBi(i+1)">
+                      {{ data.moTa }}
+                    </div>
+                    <input [hidden]="editIdThietBi !== i+1" type="text" nz-input [(ngModel)]="data.moTa" (blur)="stopEditChiTietThongSoThietBi()" />
+                  </td>
+                  <td>
+                    <div class="editable-cell" [hidden]="editIdThietBi === i+1" (click)="startEditChiTietThongSoThietBi(i+1)">
+                      {{ data.status }}
+                    </div>
+                    <input [hidden]="editIdThietBi !== i+1" type="text" nz-input [(ngModel)]="data.status" (blur)="stopEditChiTietThongSoThietBi()" />
+                  </td>
+                  <td>
+                    <div class="editable-cell" [hidden]="editIdThietBi === i+1" (click)="startEditChiTietThongSoThietBi(i+1)">
+                      {{ data.phanLoai }}
+                    </div>
+                    <input [hidden]="editIdThietBi !== i+1" type="text" nz-input [(ngModel)]="data.phanLoai" (blur)="stopEditChiTietThongSoThietBi()" />
+                  </td>
+                  <td><button (click)="deleteRowThietBi(data.maThietBi)">Xoá</button></td>
+                  </ng-container>
+                  <!-- <ng-template #editTemplate>
+                    <td><input type="text" nz-input [(ngModel)]="editCache[data.maThietBi].data.name" /></td>
+                    <td><input type="text" nz-input [(ngModel)]="editCache[data.maThietBi].data.age" /></td>
+                    <td><input type="text" nz-input [(ngModel)]="editCache[data.maThietBi].data.address" /></td>
+                    <td>
+                      <a (click)="saveEdit(data.maThietBi)" class="save">Save</a>
+                      <a nz-popconfirm nzPopconfirmTitle="Sure to cancel?" (nzOnConfirm)="cancelEdit(data.maThietBi)">Cancel</a>
+                    </td>
+                  </ng-template> -->
+                </tr>
               </tbody>
             </nz-table>
           </ng-container>
         </nz-modal>
-        <!-- -------------------------------------------- Tim kiem ---------------------------------------------------- -->
+        <!-- ----------------------------------------------- Tìm Kiếm ---------------------------------------------- -->
       </nz-breadcrumb>
       <div class="inner-content">
         <nz-table #fixedTable [nzData]="searchResults" [nzScroll]="{ x: '1150px', y: '850px' }">
@@ -98,50 +236,47 @@
               <th nzLeft>STT</th>
               <th nzLeft>
                 Mã thiết bị
-                  <input type="text" nz-input placeholder="search" 
-                  [(ngModel)]="maThietBi" [ngModelOptions]="{standalone:true}"/>
-                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="timKiemThietBi()"></span></button>
+                  <input type="text" nz-input placeholder="search" [(ngModel)]="maThietBi" [ngModelOptions]="{standalone:true}"  />
+                  <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="timKiemThietBi()" ></span></button>
               </th>
               <th>
                 Loại thiết bị
-                  <input type="text" nz-input placeholder="search" 
-                  [(ngModel)]="loaiThietBi" [ngModelOptions]="{standalone:true}"/>
+                  <input type="text" nz-input placeholder="search" [(ngModel)]="loaiThietBi" [ngModelOptions]="{standalone:true}"  />
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="timKiemThietBi()"></span></button>
               </th>
               <th>
                 Dây chuyền
-                  <input type="text" nz-input placeholder="search"
-                  [(ngModel)]="dayChuyen" [ngModelOptions]="{standalone:true}"/>
+                  <input type="text" nz-input placeholder="search" [(ngModel)]="dayChuyen" [ngModelOptions]="{standalone:true}"  />
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="timKiemThietBi()"></span></button>
               </th>
               <th>
                 Trạng thái
-                  <input type="text" nz-input placeholder="search"
-                  [(ngModel)]="status" [ngModelOptions]="{standalone:true}"/>
-
+                  <input type="text" nz-input placeholder="search" [(ngModel)]="status" [ngModelOptions]="{standalone:true}"  />
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="timKiemThietBi()"></span></button>
               </th>
               <th>
                 Ngày tạo
-                  <input type="date" nz-input placeholder="search" 
-                  [(ngModel)]="ngayTao" [ngModelOptions]="{standalone:true}"/>
-
+                  <input type="datetime-local" nz-input placeholder="search" [(ngModel)]="ngayTao" [ngModelOptions]="{standalone:true}"  />
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="timKiemThietBi()"></span></button>
-      
 
+                  <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" [(ngModel)]="ngayTao" (ngModelChange)="onChange($event)" [ngModelOptions]="{standalone:true}"
+                    (nzOnOk)="onOk($event)" (click)="timKiemThietBi()" ></nz-date-picker>
               </th>
               <th>
                 Ngày cập nhật
-                  <input type="date" nz-input placeholder="search" 
-                  [(ngModel)]="timeUpdate" [ngModelOptions]="{standalone:true}"/>
+                  <input type="datetime-local" nz-input placeholder="search" [(ngModel)]="timeUpdate" [ngModelOptions]="{standalone:true}"  />
                   <button nz-button nzType="primary" nzSearch><span nz-icon nzType="search" (click)="timKiemThietBi()"></span></button>
+
+                  <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" [(ngModel)]="timeUpdate" (ngModelChange)="onChange($event)" [ngModelOptions]="{standalone:true}"
+                    (nzOnOk)="onOk($event)" (click)="timKiemThietBi()" ></nz-date-picker>
               </th>
               <th nzRight>Options</th>
             </tr>
           </thead>
+          <!-- -------------------------------------------- Hiển thị ----------------------------------------------------- -->
           <tbody>
             <tr *ngFor="let data of searchResults; let i = index">
-              <td nzLeft>{{i + 1}}</td>
+              <td nzLeft>{{ i+1}}</td>
               <td nzLeft>{{ data.maThietBi }}</td>
               <td>{{ data.loaiThietBi }}</td>
               <td>{{ data.dayChuyen }}</td>
@@ -150,11 +285,13 @@
               <td>{{ data.timeUpdate }}</td>
               <td nzRight>
                 <button class="btn-parameter-edit">
-                  <span nz-icon nzType="edit" nzTheme="outline" style="font-size: 30px;"></span>
+                  <span nz-icon nzType="edit" nzTheme="outline" style="font-size: 30px;" (click)="showModalMiddleInfor()"></span>
                 </button>
                 <button class="btn-parameter-delete">
-                  <span nz-icon nzType="delete" nzTheme="outline" style="font-size: 30px;" 
-                  (click)="delThietBi(data.maThietBi)"></span>
+                  <span nz-icon nzType="delete" nzTheme="outline" style="font-size: 30px;" (click)="delThietBi(data.maThietBi)"></span>
+                </button>
+                <button class="btn-parameter-edit">
+                  <span nz-icon nzType="plus" nzTheme="outline" style="font-size: 30px;" (click)="showModalMiddleInfor()"></span>
                 </button>
               </td>
             </tr>

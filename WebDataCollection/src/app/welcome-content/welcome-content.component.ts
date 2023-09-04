@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { DataService, ItemData, ItemDataRequest } from './../data.service';
+import { DataService, ItemData, ItemDataRequest, thietBiRequest } from './../data.service';
 import { Component, Input } from '@angular/core';
 import { NzButtonSize } from 'ng-zorro-antd/button';
 
@@ -21,52 +21,7 @@ export class WelcomeContentComponent {
   @Input() update = '';
   //---------------------khởi tạo nơi lưu trữ dữ liệu trả về ------------------
   searchResults: ItemData[] = [];
-  body: ItemDataRequest[] = [{
-    maThongSo: "test1",
-    tenThongSo:"res1",
-    mota:"res1",
-    ngayTao: Date.now(),
-    timeUpdate: Date.now(),
-    updateBy:"user",
-    status:""
-  },{
-  maThongSo: "test2",
-    tenThongSo:"res2",
-    mota:"res2",
-    ngayTao: Date.now(),
-    timeUpdate: Date.now(),
-    updateBy:"user",
-    status:""
-
-  },{
-  maThongSo: "test3",
-    tenThongSo:"res3",
-    mota:"res3",
-    ngayTao: Date.now(),
-    timeUpdate: Date.now(),
-    updateBy:"user",
-    status:""
-
-  },{
-  maThongSo: "test4",
-    tenThongSo:"res4",
-    mota:"res4",
-    ngayTao: Date.now(),
-    timeUpdate: Date.now(),
-    updateBy:"user",
-    status:""
-
-  },
-];
-  body1: ItemDataRequest ={
-    maThongSo: "",
-    tenThongSo:"",
-    mota:"",
-    ngayTao: 2,
-    timeUpdate: 2,
-    updateBy:"",
-    status:""
-  }
+  parameters: ItemData[] = [];
   constructor(private dataService: DataService, private http: HttpClient) { }
   ngOnInit(): void {
     sessionStorage.removeItem('danhSachTatCaThongSo');
@@ -103,18 +58,19 @@ export class WelcomeContentComponent {
       })
     }
   }
-  //---------------------- them moi thong so ---------------------- (chưa test )
+  //---------------------- them moi thong so ---------------------- 
   postThongSo(){
     this.searchResults = [];
-    this.http.post('http://localhost:8080/quan-ly-thong-so/them-moi-thong-so',this.body).subscribe(res =>{
+    this.http.post('http://localhost:8080/quan-ly-thong-so/them-moi-thong-so',this.listOfData).subscribe(res =>{
       console.log("message: "+res);
       this.getDanhSachThongSo();
     })
   }
-  //------------------------- cap nhat thong so -----------------------(chưa test hiển thị)
+  //------------------------- cap nhat thong so -----------------------
   putThongSo(){
     this.searchResults = [];
-    this.http.put('http://localhost:8080/quan-ly-thong-so/them-moi-thong-so'+this.update, this.body).subscribe(res=>{
+    const body = {tenThongSo:this.tenThongSo, maThongSo:this.maThongSo,moTa:this.tenThongSo,timeUpdate:Date.now(),status:this.status}
+    this.http.put('http://localhost:8080/quan-ly-thong-so/cap-nhat-thong-so/'+this.update, body).subscribe(res=>{
       console.log("cap nhat thong so: "+res);
       this.getDanhSachThongSo();
     })
@@ -141,12 +97,11 @@ export class WelcomeContentComponent {
 }
 //---------------------------- xem chi tiet thong so -------------------------------------
 getChiTietThongSo(value: string){
-  this.searchResults = [];
   if(sessionStorage.getItem("ma thong so: "+value)=== null){
     console.log("ma thong so: ", value);
     this.http.get<any>('http://localhost:8080/quan-ly-thong-so/chi-tiet-thong-so/'+ value).subscribe(res =>{
       console.log("message: ",res);
-      this.searchResults = res as ItemData[];
+      this.parameters = res as ItemData[];
       sessionStorage.setItem("ma thong so:"+value,res);
     })
   }else{
@@ -154,7 +109,7 @@ getChiTietThongSo(value: string){
     if (result) {
       console.log('lay tu cache');
       console.log("ma thong so: ", value);
-      this.searchResults = JSON.parse(result);
+      this.parameters = JSON.parse(result);
   }
 }
 }
@@ -178,10 +133,12 @@ expandSet = new Set<number>();
   }
 
   showModalMiddle(): void {
+  this.listOfData = [];
     this.isVisibleMiddle = true;
   }
   showModalMiddle1(maThongSo: string): void {
     this.getChiTietThongSo(maThongSo);
+    this.update = maThongSo;
     this.isVisibleMiddle1 = true;
   }
 
@@ -195,6 +152,7 @@ expandSet = new Set<number>();
 
   handleOkMiddle(): void {
     console.log('click ok');
+    this.postThongSo()
     this.isVisibleMiddle = false;
   }
 
@@ -203,6 +161,8 @@ expandSet = new Set<number>();
   }
   handleOkMiddle1(): void {
     console.log('click ok');
+    console.log('test:',this.tenThongSo,this.maThongSo,this.status)
+    this.putThongSo()
     this.isVisibleMiddle1 = false;
   }
 
@@ -210,24 +170,39 @@ expandSet = new Set<number>();
     this.isVisibleMiddle1 = false;
   }
   // tao du lieu gia 
-  listOfData = [
-    {
+  editId: number | null = null;
+  listOfData: ItemDataRequest[] = [];
+
+  i = this.listOfData.length;
+
+  startEdit(id: number): void {
+    this.editId = id;
+  }
+
+  stopEdit(): void {
+    this.editId = null;
+  }
+
+  addRow(): void {
+    this.listOfData = [
+      ...this.listOfData,
+      {
       tenThongSo:"",
       maThongSo:"",
-      moTa:"",
+      mota:"",
+      ngayTao: Date.now(),
+      timeUpdate: Date.now(),
+      updateBy:"user",
       status:""
-    }
-  ];
-  data = {
-    tenThongSo:"",
-    maThongSo:"",
-    moTa:"",
-    status:""
+      }
+    ];
+    console.log('add: ',this.listOfData)
+    this.i++;
   }
-  insertListOfData(){
-    this.listOfData.push(this.data);
+
+  deleteRow(tenThongSo: string): void {
+    this.listOfData = this.listOfData.filter(d => d.tenThongSo !== tenThongSo);
+    console.log('del ',this.listOfData)
   }
-  removeItemListOfData(){
-    this.listOfData.pop();
-  }
+
 }

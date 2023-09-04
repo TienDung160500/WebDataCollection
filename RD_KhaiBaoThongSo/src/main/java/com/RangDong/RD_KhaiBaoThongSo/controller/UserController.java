@@ -45,8 +45,8 @@ public class UserController {
     }
 // Note test
     @GetMapping("/test/{maThongSo}")
-    public ThietBiResponse getByMaThongSo(@PathVariable Integer maThongSo){
-        ThietBiResponse responseList = this.userService.getByMaThietBi(maThongSo);
+    public ThietBiResponse getByMaThongSo(@PathVariable String maThietBi){
+        ThietBiResponse responseList = this.userService.getByMaThietBi(maThietBi);
         return responseList;
     }
 
@@ -70,10 +70,9 @@ public class UserController {
 
     //☺ cập nhật thông số
     @PutMapping("/quan-ly-thong-so/cap-nhat-thong-so/{maThongSo}")
-    public String putThongSo(@PathVariable String maThongSo,
+    public void putThongSo(@PathVariable String maThongSo,
                              @RequestBody QuanLyThongSoRequest request) {
-        String result = this.userService.putThongSo(request, maThongSo);
-        return result;
+        this.userService.putThongSo(request, maThongSo);
     }
     //☺ su kien tim kiem
     @PostMapping("/quan-ly-thong-so/tim-kiem")
@@ -98,11 +97,10 @@ public class UserController {
         return responseList;
     }
     //----------------------- Chức năng thêm mới thiết bị -----------------------------------------------
-    //? thêm mới thiết bị vào DB
+    //☺ thêm mới thiết bị vào DB
     @PostMapping("/thiet-bi/them-moi-thiet-bi")
-    public String postThietBi (@RequestBody ThietBiRequest request){
-        String result = this.userService.postThietBi(request);
-        return result;
+    public void postThietBi (@RequestBody List<ThietBiRequest> request){
+        this.userService.postThietBi(request);
     }
     //☺ del thông số thiết bị ->xoá luôn cả thông số thiết bị
     @DeleteMapping("/thiet-bi/del-thiet-bi/{maThietBi}")
@@ -112,9 +110,8 @@ public class UserController {
 
     //? thêm mới thông số thiết bị vào DB
     @PostMapping("/thiet-bi/them-moi-thong-so-thiet-bi")
-    public String postThongSoMay(@RequestBody List<ThongSoMayRequest> requestList){
-        String result = this.userService.postThongSoMay(requestList);
-        return  result;
+    public void postThongSoMay(@RequestBody List<ThongSoMayRequest> requestList){
+        this.userService.postThongSoMay(requestList);
     }
     //? xem danh sách thông số thiết bị
     @GetMapping("/thiet-bi/danh-sach-thong-so-thiet-bi/{maThietBi}")
@@ -133,9 +130,9 @@ public class UserController {
         this.userService.putThongSoMay(requestList);
     }
     //☺xem chi tiết thông số thiet bi
-    @GetMapping("/thiet-bi/chi-tiet-thiet-bi/{idThietBi}")
-    public ThietBiResponse getAllByMaThongSo(@PathVariable Integer idThietBi){
-        ThietBiResponse responseList = this.userService.getAllByIdThietBi(idThietBi);
+    @GetMapping("/thiet-bi/chi-tiet-thiet-bi/{maThietBi}")
+    public ThietBiResponse getAllByMaThongSo(@PathVariable String maThietBi){
+        ThietBiResponse responseList = this.userService.getAllByIdThietBi(maThietBi);
         return responseList;
     }
     //------------------------------------------------ * ---------------------------------------------------------------

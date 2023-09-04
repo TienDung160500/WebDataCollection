@@ -44,11 +44,11 @@
         <nz-breadcrumb-item>Thông số máy</nz-breadcrumb-item>
         <!--------------------------------------------------- template Chi tiết thông số  -------------------------------------------------------------------->
         <nz-modal [(nzVisible)]="isVisibleMiddle1" nzTitle="Chi tiết thông số " nzCentered
-          (nzOnCancel)="handleCancelMiddle1()" (nzOnOk)="handleOkMiddle1()">
+          (nzOnCancel)="handleCancelMiddle1()" (nzOnOk)="handleOkMiddle1()" nzWidth="auto">
           <ng-container *nzModalContent>
             <form action="">
             </form>
-            <nz-table #nzTable [nzData]="searchResults" nzTableLayout="fixed">
+            <nz-table #nzTable [nzData]="parameters" nzTableLayout="fixed">
               <thead>
                 <tr>
                   <th nzWidth="60px"></th>
@@ -60,13 +60,13 @@
                 </tr>
               </thead>
               <tbody>
-                <ng-container *ngFor="let data of searchResults">
+                <ng-container *ngFor="let data of parameters">
                   <tr>
                     <td [nzExpand]="expandSet.has(data.idThongSo)" (nzExpandChange)="onExpandChange(data.idThongSo, $event)"></td>
-                    <td><input type="text" nz-input placeholder="search" [(ngModel)]="data.tenThongSo"[ngModelOptions]="{standalone:true}" /></td>
-                    <td><input type="text" nz-input placeholder="search" [(ngModel)]="data.maThongSo"[ngModelOptions]="{standalone:true}" /></td>
-                    <td><input type="text" nz-input placeholder="search" [(ngModel)]="data.moTa"[ngModelOptions]="{standalone:true}" /></td>
-                    <td><input type="text" nz-input placeholder="search" [(ngModel)]="data.status"[ngModelOptions]="{standalone:true}" /></td>
+                    <td><input type="text" nz-input placeholder="{{data.tenThongSo}}" [(ngModel)]="tenThongSo"[ngModelOptions]="{standalone:true}" /></td>
+                    <td><input type="text" nz-input placeholder="{{data.maThongSo}}" [(ngModel)]="maThongSo"[ngModelOptions]="{standalone:true}" /></td>
+                    <td><input type="text" nz-input placeholder="{{data.moTa}}" [(ngModel)]="tenThongSo"[ngModelOptions]="{standalone:true}" /></td>
+                    <td><input type="text" nz-input placeholder="{{data.status}}" [(ngModel)]="status"[ngModelOptions]="{standalone:true}" /></td>
                   </tr>
                 </ng-container>
               </tbody>
@@ -78,13 +78,13 @@
           <span nz-icon nzType="plus" nzTheme="outline"></span>
         </button>
         <nz-modal [(nzVisible)]="isVisibleMiddle" nzTitle="Thêm mới thông số" nzCentered
-          (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()" class="custom-modal">
+          (nzOnCancel)="handleCancelMiddle()" (nzOnOk)="handleOkMiddle()" class="custom-modal" nzWidth="auto">
           <ng-container *nzModalContent>
             <form action="">
               <input nz-input placeholder="Mã máy" nzSize="default" style="width: 40%" />
               <input nz-input placeholder="Loại máy" nzSize="default"
                 style="width: 40%; right: 20px; position: absolute;" />
-                <button type="plus" (click)="insertListOfData()">Them moi</button>
+                <button type="plus" (click)="addRow()">Them moi</button>
             </form>
             <nz-table #nzTable [nzData]="listOfData" nzTableLayout="fixed" style="width: 100%;">
               <thead>
@@ -100,10 +100,33 @@
                 <ng-container *ngFor="let data of listOfData; let i = index">
                   <tr>
                     <td>{{i+1}}</td>
-                    <td><input type="text" nz-input placeholder="search" [(ngModel)]="data.tenThongSo"[ngModelOptions]="{standalone:true}" /></td>
-                    <td><input type="text" nz-input placeholder="search" [(ngModel)]="data.maThongSo"[ngModelOptions]="{standalone:true}" /></td>
-                    <td><input type="text" nz-input placeholder="search" [(ngModel)]="data.tenThongSo"[ngModelOptions]="{standalone:true}" /></td>
-                    <td><button (click)="removeItemListOfData()">Xoá</button></td>
+                    <td>
+                      <div class="editable-cell" [hidden]="editId === i+1" (click)="startEdit(i+1)">
+                        {{ data.tenThongSo }}
+                      </div>
+                      <input [hidden]="editId !== i+1" type="text" nz-input [(ngModel)]="data.tenThongSo" (blur)="stopEdit()" />
+                    </td>
+
+                    <td>
+                      <div class="editable-cell" [hidden]="editId === i+1" (click)="startEdit(i+1)">
+                        {{ data.maThongSo }}
+                      </div>
+                      <input [hidden]="editId !== i+1" type="text" nz-input [(ngModel)]="data.maThongSo" (blur)="stopEdit()" />
+                    </td>
+
+                    <td>
+                      <div class="editable-cell" [hidden]="editId === i+1" (click)="startEdit(i+1)">
+                        {{ data.tenThongSo }}
+                      </div>
+                      <input [hidden]="editId !== i+1" type="text" nz-input [(ngModel)]="data.tenThongSo" (blur)="stopEdit()" />
+                    </td>
+                    <td>
+                      <div class="editable-cell" [hidden]="editId === i+1" (click)="startEdit(i+1)">
+                        {{ data.status }}
+                      </div>
+                      <input [hidden]="editId !== i+1" type="text" nz-input [(ngModel)]="data.status" (blur)="stopEdit()" />
+                    </td>
+                    <td><button (click)="deleteRow(data.tenThongSo)">Xoá</button></td>
                   </tr>
                 </ng-container>
               </tbody>
